@@ -3,11 +3,10 @@ package modules
 import javax.inject._
 
 @Singleton
-class Global {
-}
+class Global {}
 
 class GlobalModule extends com.google.inject.AbstractModule {
   def configure() = {
-    bind(classOf[Global]).asEagerSingleton
+    bind(classOf[Global]).asEagerSingleton()
   }
 }

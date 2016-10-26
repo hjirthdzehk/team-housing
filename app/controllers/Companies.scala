@@ -12,7 +12,6 @@ import play.api.mvc._
 
 @Singleton
 class Companies @Inject() (json4s: Json4s) extends Controller {
-
   import json4s._
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
 
@@ -27,7 +26,10 @@ class Companies @Inject() (json4s: Json4s) extends Controller {
     }
   }
 
-  case class CompanyForm(name: String, url: Option[String] = None)
+  case class CompanyForm(
+    name: String,
+    url: Option[String] = None
+  )
 
   private val companyForm = Form(
     mapping(
@@ -55,5 +57,4 @@ class Companies @Inject() (json4s: Json4s) extends Controller {
       case _ => NotFound
     }
   }
-
 }

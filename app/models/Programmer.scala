@@ -3,28 +3,32 @@ package models
 import scalikejdbc._
 import org.joda.time.DateTime
 
-case class Programmer(
-    id: Long,
-    name: String,
-    companyId: Option[Long] = None,
-    company: Option[Company] = None,
-    skills: Seq[Skill] = Nil,
-    createdAt: DateTime,
-    deletedAt: Option[DateTime] = None
-) {
+case class Programmer(id: Long,
+                      name: String,
+                      companyId: Option[Long] = None,
+                      company: Option[Company] = None,
+                      skills: Seq[Skill] = Nil,
+                      createdAt: DateTime,
+                      deletedAt: Option[DateTime] = None) {
 
-  def save()(implicit session: DBSession = Programmer.autoSession): Programmer = Programmer.save(this)(session)
-  def destroy()(implicit session: DBSession = Programmer.autoSession): Unit = Programmer.destroy(id)(session)
+  def save()(implicit session: DBSession = Programmer.autoSession): Programmer = {
+    Programmer.save(this)(session)
+  }
+  def destroy()(implicit session: DBSession = Programmer.autoSession): Unit = {
+    Programmer.destroy(id)(session)
+  }
 
   private val (ps, p, s) = (ProgrammerSkill.ps, Programmer.p, Skill.s)
   private val column = ProgrammerSkill.column
 
-  def addSkill(skill: Skill)(implicit session: DBSession = Programmer.autoSession): Unit = withSQL {
+  def addSkill(skill: Skill)
+              (implicit session: DBSession = Programmer.autoSession): Unit = withSQL {
     insert.into(ProgrammerSkill)
       .namedValues(column.programmerId -> id, column.skillId -> skill.id)
   }.update.apply()
 
-  def deleteSkill(skill: Skill)(implicit session: DBSession = Programmer.autoSession): Unit = withSQL {
+  def deleteSkill(skill: Skill)
+                 (implicit session: DBSession = Programmer.autoSession): Unit = withSQL {
     delete.from(ProgrammerSkill)
       .where.eq(column.programmerId, id).and.eq(column.skillId, skill.id)
   }.update.apply()
@@ -41,8 +45,12 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
   override val nameConverters = Map("At$" -> "_timestamp")
 
   // simple extractor
-  def apply(p: SyntaxProvider[Programmer])(rs: WrappedResultSet): Programmer = apply(p.resultName)(rs)
-  def apply(p: ResultName[Programmer])(rs: WrappedResultSet): Programmer = new Programmer(
+  def apply(p: SyntaxProvider[Programmer])
+           (rs: WrappedResultSet): Programmer = {
+    apply(p.resultName)(rs)
+  }
+  def apply(p: ResultName[Programmer])
+           (rs: WrappedResultSet): Programmer = new Programmer(
     id = rs.get(p.id),
     name = rs.get(p.name),
     companyId = rs.get(p.companyId),
@@ -51,7 +59,9 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
   )
 
   // join query with company table
-  def apply(p: SyntaxProvider[Programmer], c: SyntaxProvider[Company])(rs: WrappedResultSet): Programmer = {
+  def apply(p: SyntaxProvider[Programmer],
+            c: SyntaxProvider[Company])
+           (rs: WrappedResultSet): Programmer = {
     apply(p.resultName)(rs).copy(company = rs.longOpt(c.resultName.id).flatMap { _ =>
       if (rs.timestampOpt(c.resultName.deletedAt).isEmpty) Some(Company(c)(rs)) else None
     })
@@ -66,9 +76,10 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
   private val isNotDeleted = sqls.isNull(p.deletedAt)
 
   // find by primary key
-  def find(id: Long)(implicit session: DBSession = autoSession): Option[Programmer] = withSQL {
+  def find(id: Long)
+          (implicit session: DBSession = autoSession): Option[Programmer] = withSQL {
     select
-      .from(Programmer as p)
+      .from[Programmer](Programmer as p)
       .leftJoin(Company as c).on(p.companyId, c.id)
       .leftJoin(ProgrammerSkill as ps).on(ps.programmerId, p.id)
       .leftJoin(Skill as s).on(sqls.eq(ps.skillId, s.id).and.isNull(s.deletedAt))
@@ -81,7 +92,7 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
   // programmer with company(optional) with skills(many)
   def findAll()(implicit session: DBSession = autoSession): List[Programmer] = withSQL {
     select
-      .from(Programmer as p)
+      .from[Programmer](Programmer as p)
       .leftJoin(Company as c).on(p.companyId, c.id)
       .leftJoin(ProgrammerSkill as ps).on(ps.programmerId, p.id)
       .leftJoin(Skill as s).on(sqls.eq(ps.skillId, s.id).and.isNull(s.deletedAt))
@@ -102,10 +113,13 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
   }.map(Programmer(p, c)).list.apply()
 
   def countAll()(implicit session: DBSession = autoSession): Long = withSQL {
-    select(sqls.count).from(Programmer as p).where.append(isNotDeleted)
+    select(sqls.count).from(Programmer as p)
+      .where.append(isNotDeleted)
   }.map(rs => rs.long(1)).single.apply().get
 
-  def findAllBy(where: SQLSyntax, withCompany: Boolean = true)(implicit session: DBSession = autoSession): List[Programmer] = withSQL {
+  def findAllBy(where: SQLSyntax,
+                withCompany: Boolean = true)
+               (implicit session: DBSession = autoSession): List[Programmer] = withSQL {
     select
       .from[Programmer](Programmer as p)
       .map(sql => if (withCompany) sql.leftJoin(Company as c).on(p.companyId, c.id) else sql) // dynamic
@@ -117,11 +131,16 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
     .map { (programmer, skills) => programmer.copy(skills = skills) }
     .list.apply()
 
-  def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = withSQL {
-    select(sqls.count).from(Programmer as p).where.append(isNotDeleted).and.append(sqls"${where}")
+  def countBy(where: SQLSyntax)
+             (implicit session: DBSession = autoSession): Long = withSQL {
+    select(sqls.count).from(Programmer as p)
+      .where.append(isNotDeleted).and.append(sqls"${where}")
   }.map(_.long(1)).single.apply().get
 
-  def create(name: String, companyId: Option[Long] = None, createdAt: DateTime = DateTime.now)(implicit session: DBSession = autoSession): Programmer = {
+  def create(name: String,
+             companyId: Option[Long] = None,
+             createdAt: DateTime = DateTime.now)
+            (implicit session: DBSession = autoSession): Programmer = {
     if (companyId.isDefined && Company.find(companyId.get).isEmpty) {
       throw new IllegalArgumentException(s"Company is not found! (companyId: ${companyId})")
     }
@@ -142,18 +161,22 @@ object Programmer extends SQLSyntaxSupport[Programmer] {
     )
   }
 
-  def save(m: Programmer)(implicit session: DBSession = autoSession): Programmer = {
+  def save(programmer: Programmer)
+          (implicit session: DBSession = autoSession): Programmer = {
     withSQL {
       update(Programmer).set(
-        column.name -> m.name,
-        column.companyId -> m.companyId
-      ).where.eq(column.id, m.id).and.isNull(column.deletedAt)
+        column.name -> programmer.name,
+        column.companyId -> programmer.companyId
+      ).where.eq(column.id, programmer.id).and.isNull(column.deletedAt)
     }.update.apply()
-    m
+    programmer
   }
 
-  def destroy(id: Long)(implicit session: DBSession = autoSession): Unit = withSQL {
-    update(Programmer).set(column.deletedAt -> DateTime.now).where.eq(column.id, id)
+  def destroy(id: Long)
+             (implicit session: DBSession = autoSession): Unit = withSQL {
+    update(Programmer)
+      .set(column.deletedAt -> DateTime.now)
+      .where.eq(column.id, id)
   }.update.apply()
 
 }

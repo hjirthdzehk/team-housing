@@ -40,4 +40,4 @@ lazy val scalikejdbcPlayVersion = "2.5.+"
 lazy val h2Version = "1.4.+"
 
 
-fork in run := true
+fork in run := false

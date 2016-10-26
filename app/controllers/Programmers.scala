@@ -27,7 +27,10 @@ class Programmers @Inject() (json4s: Json4s) extends Controller {
     }
   }
 
-  case class ProgrammerForm(name: String, companyId: Option[Long] = None)
+  case class ProgrammerForm(
+    name: String,
+    companyId: Option[Long] = None
+  )
 
   private val programmerForm = Form(
     mapping(
