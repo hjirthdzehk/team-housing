@@ -1,8 +1,11 @@
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+import scalariform.formatter.preferences._
+
 lazy val root = (project in file("."))
   .enablePlugins(PlayScala)
   .enablePlugins(SbtWeb)
   .settings(
-    name := """scalikejdbc-activator-template""",
+    name := """team-housing""",
     version := "0.1",
     scalaVersion := "2.11.8",
     resolvers ++= Seq(
@@ -39,5 +42,19 @@ lazy val scalikejdbcVersion = scalikejdbc.ScalikejdbcBuildInfo.version
 lazy val scalikejdbcPlayVersion = "2.5.+"
 lazy val h2Version = "1.4.+"
 
+SbtScalariform.scalariformSettings
+
+ScalariformKeys.preferences := ScalariformKeys.preferences.value
+  .setPreference(AlignParameters, false)
+  .setPreference(CompactStringConcatenation, false)
+  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(IndentSpaces, 2)
+  .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
+  .setPreference(PreserveSpaceBeforeArguments, false)
+  .setPreference(RewriteArrowSymbols, false)
+  .setPreference(SpaceBeforeColon, false)
+  .setPreference(SpaceInsideBrackets, false)
+  .setPreference(SpaceInsideParentheses, false)
+  .setPreference(SpacesAroundMultiImports, false)
 
 fork in run := false
