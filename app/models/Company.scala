@@ -35,31 +35,33 @@ object Company extends SQLSyntaxSupport[Company] {
   val c = Company.syntax("c")
 
   def find(id: Long)(implicit session: DBSession = autoSession): Option[Company] =
-    sql"""select * from ${tableName}
-          where id = ${id} and deleted_at is not null
+    sql"""select ${c.result.*} from ${Company as c}
+          where ${c.id} = ${id} and ${c.deletedAt} is null
        """.map(Company(c)).single().apply()
 
-  def findAll()(implicit session: DBSession = autoSession): List[Company] =
-
-    sql"""select * from ${tableName}
-          where deleted_at is not null
-          order by id
-       """.map(Company(c)).list.apply()
+  def findAll()(implicit session: DBSession = autoSession): List[Company] = {
+    val query =
+      sql"""SELECT ${c.result.*} FROM ${Company as c}
+          WHERE ${c.deletedAt} IS NULL
+          ORDER BY ${c.id}
+       """
+    query.map(Company(c)).list.apply()
+  }
 
   def countAll()(implicit session: DBSession = autoSession): Long =
-    sql"""select count(*) from ${tableName}
-          where deleted_at is not null
+    sql"""select count(*) from ${Company as c}
+          where ${c.deletedAt} is null
        """.map(rs => rs.long(1)).single.apply().get
 
   def findAllBy(where: SQLSyntax)(implicit session: DBSession = autoSession): List[Company] =
-    sql"""select * from ${tableName}
-          where deleted_at is not null and ${where}
-          order by id
+    sql"""select ${c.result.*} from ${Company as c}
+          where ${c.deletedAt} is null and ${where}
+          order by ${c.id}
       """.map(Company(c)).list.apply()
 
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long =
-    sql"""select count(*) from ${tableName}
-         where deleted_at is not null and ${where}
+    sql"""select count(*) from ${Company as c}
+         where ${c.deletedAt} is null and ${where}
        """.map(_.long(1)).single.apply().get
 
   def create(
@@ -67,8 +69,7 @@ object Company extends SQLSyntaxSupport[Company] {
     url: Option[String] = None,
     createdAt: DateTime = DateTime.now
   )(implicit session: DBSession = autoSession): Company = {
-
-    val id = sql"""insert into ${tableName} (name, url, created_at)
+    val id = sql"""insert into ${table} (${column.name}, ${column.url}, ${column.createdAt})
                    values (${name}, ${url}, ${createdAt})"""
       .updateAndReturnGeneratedKey.apply()
 
@@ -76,16 +77,16 @@ object Company extends SQLSyntaxSupport[Company] {
   }
 
   def save(m: Company)(implicit session: DBSession = autoSession): Company = {
-    sql"""update ${tableName}
-          set name = ${m.name}, url = ${m.url}
-          where id = ${m.id} and deleted_at is null
+    sql"""update ${table}
+          set ${column.name} = ${m.name}, ${column.url} = ${m.url}
+          where ${column.id} = ${m.id} and ${column.deletedAt} is null
        """.update.apply()
     m
   }
 
   def destroy(id: Long)(implicit session: DBSession = autoSession): Unit =
-    sql"""update ${tableName}
-          set deleted_at = ${DateTime.now}
-          where id = ${id}
+    sql"""update ${table}
+          set ${column.deletedAt} = ${DateTime.now}
+          where ${column.id} = ${id}
        """.update.apply()
 }

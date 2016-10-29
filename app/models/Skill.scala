@@ -38,9 +38,10 @@ object Skill extends SQLSyntaxSupport[Skill] {
 
   private val isNotDeleted = sqls.isNull(s.deletedAt)
 
-  def find(id: Long)(implicit session: DBSession = autoSession): Option[Skill] = withSQL {
-    select.from(Skill as s).where.eq(s.id, id).and.append(isNotDeleted)
-  }.map(Skill(s)).single.apply()
+  def find(id: Long)(implicit session: DBSession = autoSession): Option[Skill] =
+    sql"""select ${s.result.*} from ${Skill as s}
+          where ${s.id} = ${id} and ${s.deletedAt} is null
+       """.map(Skill(s)).single.apply()
 
   def findAll()(implicit session: DBSession = autoSession): List[Skill] = withSQL {
     select.from(Skill as s)

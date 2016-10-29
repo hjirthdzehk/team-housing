@@ -24,12 +24,12 @@ case class Programmer(
   private val column = ProgrammerSkill.column
 
   def addSkill(skill: Skill)(implicit session: DBSession = Programmer.autoSession): Unit =
-    sql"""insert into programmer_skill
+    sql"""insert into ${ProgrammerSkill.table}
           values (${id}, ${skill.id})
        """.update().apply()
 
   def deleteSkill(skill: Skill)(implicit session: DBSession = Programmer.autoSession): Unit =
-    sql"""delete from ${ProgrammerSkill.tableName}
+    sql"""delete from ${ProgrammerSkill.table}
           where ${column.programmerId} = ${id} and ${column.skillId} = ${skill.id}
       """.update.apply()
 }

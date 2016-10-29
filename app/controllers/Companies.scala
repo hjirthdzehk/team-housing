@@ -1,6 +1,6 @@
 package controllers
 
-import javax.inject.{ Inject, Singleton }
+import javax.inject.{Inject, Singleton}
 import com.github.tototoshi.play2.json4s.native._
 import models._
 import org.json4s._
