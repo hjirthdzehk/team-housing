@@ -75,29 +75,9 @@
         </div>
     </div>
     <script type="text/javascript">
-        var sampleGroups = [{
-            title: 'Water',
-            meters: [{
-                id:0,
-                title:'Hot water#1',
-                unit:'m^3'
-            },
-            {
-                id:1,
-                title:'Hot water#2',
-                unit:'m^3'
-            }]
-        },
-        {
-            title: 'Electricity',
-            meters: [{
-            id:2,
-            title:'Electricity in hall #1',
-            unit:'KWT/h'
-        }]
-        }];
-
-        ko.applyBindings(new MeasuresInputViewModel(sampleGroups), $('#measuresInput')[0]);
+        $.get('/meters/byFlatId/1').then(function(groups) {
+            ko.applyBindings(new MeasuresInputViewModel(groups), $('#measuresInput')[0]);
+        });
     </script>
 </body>
 </html>

@@ -30,7 +30,7 @@ lazy val root = (project in file("."))
       DBs.setupAll
       DBInitializer.run()
       implicit val autoSession = AutoSession
-      val c = Company.syntax("c")
+      val (c, m, mu) = (Company.syntax("c"), Meter.syntax("m"), MeterUnit.syntax("mu"))
     """,
     routesGenerator := InjectedRoutesGenerator,
     scalikejdbcSettings // http://scalikejdbc.org/documentation/setup.html
