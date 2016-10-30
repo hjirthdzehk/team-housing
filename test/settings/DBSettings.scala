@@ -21,7 +21,7 @@ object DBSettings {
 
 }
 
-object  DBInitializer {
+object DBInitializer {
 
   def run() {
     DB readOnly { implicit s =>
