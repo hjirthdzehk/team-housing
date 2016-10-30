@@ -1,6 +1,5 @@
 package controllers
 
-import java.util.Date
 import javax.inject.{Inject, Singleton}
 
 import com.github.tototoshi.play2.json4s.native._
@@ -10,7 +9,6 @@ import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.data.validation.Constraints._
 import play.api.mvc._
 
 case class MeterViewModel(id: Integer,
@@ -56,7 +54,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
       formWithErrors => BadRequest(formWithErrors.errors.foldLeft("")((res,message) => res + message.message+",")),
       form => {
         val meterReading = MeterReading.create(form.value, form.date, false, form.meterId)
-        NoContent
+        Ok
       }
     )
   }
