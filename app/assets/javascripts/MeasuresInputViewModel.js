@@ -9,6 +9,20 @@ var MeasuresInputViewModel = function(groups) {
         return group;
     }));
     self.submit = function () {
-        console.log(ko.toJS(this));
+         var readings = _.chain(self.meterGroups())
+            .map(function(group) {
+                return group.meters;
+            })
+            .flatten()
+            .map(function(meterReading) {
+                return {
+                    meterId: meterReading.id,
+                    value: meterReading.value(),
+                    date: self.date()
+                };
+            }).value();
+        readings.forEach(function(reading) {
+            $.post('/meterReadings', reading)
+        });
     };
 };

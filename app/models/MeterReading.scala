@@ -1,0 +1,40 @@
+package models
+
+import java.util.Date
+
+import org.joda.time.DateTime
+import scalikejdbc._
+
+case class MeterReading(meterReadingId: Long,
+                        value: BigDecimal,
+                        date: DateTime,
+                        paid: Boolean,
+                        meterId: Int) {
+}
+
+object MeterReading extends SQLSyntaxSupport[MeterReading]{
+  def apply(mr: SyntaxProvider[MeterReading])(rs: WrappedResultSet): MeterReading = {
+    apply(mr.resultName)(rs)
+  }
+  def apply(mr: ResultName[MeterReading])(rs: WrappedResultSet): MeterReading = new MeterReading(
+    meterReadingId = rs.get(mr.meterReadingId),
+    value = rs.get(mr.value),
+    date = rs.get(mr.date),
+    paid = rs.get(mr.paid),
+    meterId = rs.get(mr.meterId)
+  )
+
+  val mr = MeterReading.syntax("mr")
+
+  def create(value: BigDecimal,
+             date: DateTime,
+             paid: Boolean,
+             meterId: Integer
+            )(implicit session: DBSession = autoSession): MeterReading = {
+    val id = sql"""insert into ${table} (${column.value}, ${column.date}, ${column.paid}, ${column.meterId})
+                   values (${value}, ${date}, ${paid}, ${meterId})"""
+      .updateAndReturnGeneratedKey.apply()
+
+    MeterReading(id, value, date, paid, meterId)
+  }
+}

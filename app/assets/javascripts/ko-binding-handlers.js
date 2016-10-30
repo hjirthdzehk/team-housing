@@ -1,8 +1,9 @@
 ko.bindingHandlers.datepicker = {
     init: function(element, valueAccessor, allBindingsAccessor) {
         //initialize datepicker with some optional options
-        var options = allBindingsAccessor().datepickerOptions || {};
-        $(element).datepicker(options);
+        $(element).datepicker({
+            format: 'yyyy-mm-dd'
+        });
 
         //when a user changes the date, update the view model
         ko.utils.registerEventHandler(element, "changeDate", function(event) {
