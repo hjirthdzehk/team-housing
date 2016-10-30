@@ -21,15 +21,16 @@ lazy val root = (project in file("."))
       "com.github.tototoshi" %% "play-json4s-native"            % "0.5.+",
       "org.flywaydb"         %% "flyway-play"                   % "3.0.+",
       "org.scalikejdbc"      %% "scalikejdbc-test"              % scalikejdbcVersion  % "test",
+      "postgresql"           % "postgresql"                     % "9.1-901.jdbc4",
       specs2 % "test"
     ),
-    initialCommands := """
+      initialCommands := """
       import scalikejdbc._, config._
       import models._, utils._
       DBs.setupAll
       DBInitializer.run()
       implicit val autoSession = AutoSession
-      val (p, c, s, ps) = (Programmer.syntax("p"), Company.syntax("c"), Skill.syntax("s"), ProgrammerSkill.syntax("ps"))
+      val c = Company.syntax("c")
     """,
     routesGenerator := InjectedRoutesGenerator,
     scalikejdbcSettings // http://scalikejdbc.org/documentation/setup.html
