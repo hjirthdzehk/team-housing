@@ -6,24 +6,22 @@ import scalikejdbc._
 case class Building(
   cladrId: Int,
   buildingId: Int
-) {}
+)
 
 object Building extends SQLSyntaxSupport[Building] {
 
-  def apply(b: ResultName[Building])(rs: WrappedResultSet): Building = {
-    new Building(
+  def apply(b: ResultName[Building])(rs: WrappedResultSet): Building =
+    Building(
       cladrId = rs.get(b.cladrId),
       buildingId = rs.get(b.buildingId)
     )
-  }
 
-  def apply(b: SyntaxProvider[Building])(rs: WrappedResultSet): Building = {
+  def apply(b: SyntaxProvider[Building])(rs: WrappedResultSet): Building =
     apply(b.resultName)(rs)
-  }
 
   val b = Building.syntax("b")
 
-  def find(cladrId: Int)(implicit session: DBSession = autoSession) =
+  def find(cladrId: Int)(implicit session: DBSession = autoSession): Option[Building] =
     sql"""select ${b.result.*} from ${Building as b}
           where ${b.cladrId} = ${cladrId}
       """.map(Building(b)).single().apply()
@@ -41,7 +39,7 @@ object Building extends SQLSyntaxSupport[Building] {
     cladrId: Int,
     buildingId: Int
   )(implicit session: DBSession = autoSession) = {
-    sql"""delete from $table
+    sql"""delete from ${table}
           where ${column.cladrId} = $cladrId and
                 ${column.buildingId} = $buildingId
        """.update.apply()

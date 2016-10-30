@@ -11,9 +11,9 @@ case class Meter(
   meterUnitId: Int,
   active: Boolean,
   flatId: Int
-) {}
+)
 
-object Meter extends SQLSyntaxSupport[Meter]{
+object Meter extends SQLSyntaxSupport[Meter] {
   def apply(m: ResultName[Meter])(rs: WrappedResultSet): Meter = {
     new Meter(
       meterId = rs.get(m.meterId),
@@ -32,7 +32,7 @@ object Meter extends SQLSyntaxSupport[Meter]{
 
   val m = Meter.syntax("m")
 
-  def findByFlatId(flatId: Int)(implicit session: DBSession = autoSession) =
+  def findByFlatId(flatId: Int)(implicit session: DBSession = autoSession): Seq[Meter] =
     sql"""select ${m.result.*} from ${Meter as m}
           where ${m.flatId} = ${flatId} AND ${m.active} = TRUE
       """.map(Meter(m)).list.apply()

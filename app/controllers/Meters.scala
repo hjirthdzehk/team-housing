@@ -13,10 +13,10 @@ import play.api.mvc._
 
 case class MeterViewModel(id: Integer,
                           title: String,
-                          unit: String) {}
+                          unit: String)
 
 case class MeterGroup(title: String,
-                      meters: List[MeterViewModel]) {}
+                      meters: List[MeterViewModel])
 
 @Singleton
 class Meters @Inject() (json4s: Json4s) extends Controller {
@@ -28,18 +28,17 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
       Meter.findByFlatId(flatId)
         .groupBy(m => m.`type`)
         .map{ case (title: String, meters: List[Meter]) =>
-          MeterGroup(title,
+          MeterGroup(
+            title,
             meters.map{ case Meter(meterId, _, _, _, meterUnitId, active, _) =>
               MeterViewModel(meterId, title, MeterUnit.get(meterUnitId).description)}
           )
         }))
   }
 
-  case class MeterReadingForm(
-                             meterId: Int,
-                             value: BigDecimal,
-                             date: DateTime
-                             )
+  case class MeterReadingForm(meterId: Int,
+                              value: BigDecimal,
+                              date: DateTime)
 
   private val meterReadingForm = Form(
     mapping(
@@ -51,9 +50,16 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
 
   def saveReading = Action { implicit req =>
     meterReadingForm.bindFromRequest.fold(
-      formWithErrors => BadRequest(formWithErrors.errors.foldLeft("")((res,message) => res + message.message+",")),
+      formWithErrors => BadRequest(
+        formWithErrors.errors
+          .foldLeft("")((res, message) =>
+            res + message.message + ",")),
       form => {
-        val meterReading = MeterReading.create(form.value, form.date, false, form.meterId)
+        MeterReading.create(
+          value = form.value,
+          date = form.date,
+          paid = false,
+          meterId = form.meterId)
         Ok
       }
     )
