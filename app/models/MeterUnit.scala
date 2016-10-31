@@ -2,10 +2,8 @@ package models
 
 import scalikejdbc.{DBSession, WrappedResultSet, _}
 
-case class MeterUnit(
-  meterUnitId: Int,
-  description: String
-) {}
+case class MeterUnit(meterUnitId: Int,
+                     description: String)
 
 object MeterUnit extends SQLSyntaxSupport[MeterUnit]{
   def apply(m: ResultName[MeterUnit])(rs: WrappedResultSet): MeterUnit = {

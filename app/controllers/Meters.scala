@@ -23,9 +23,9 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
   import json4s._
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
 
-  def findByFlatId(flatId: Int) = Action {
+  def listByFlatId(flatId: Int) = Action {
     Ok(Extraction.decompose(
-      Meter.findByFlatId(flatId)
+      Meter.listByFlatId(flatId)
         .groupBy(m => m.`type`)
         .map{ case (title: String, meters: List[Meter]) =>
           MeterGroup(

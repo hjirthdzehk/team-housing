@@ -3,18 +3,17 @@ package models
 import org.joda.time.DateTime
 import scalikejdbc._
 
-case class Meter(
-  meterId: Int,
-  installationDate: DateTime,
-  `type`: String,
-  title: String,
-  meterUnitId: Int,
-  active: Boolean,
-  flatId: Int
-)
+case class Meter(meterId: Int,
+                 installationDate: DateTime,
+                 `type`: String,
+                 title: String,
+                 meterUnitId: Int,
+                 active: Boolean,
+                 flatId: Int)
+
 
 object Meter extends SQLSyntaxSupport[Meter] {
-  def apply(m: ResultName[Meter])(rs: WrappedResultSet): Meter = {
+  def apply(m: ResultName[Meter])(rs: WrappedResultSet): Meter =
     new Meter(
       meterId = rs.get(m.meterId),
       installationDate = rs.get(m.installationDate),
@@ -24,15 +23,13 @@ object Meter extends SQLSyntaxSupport[Meter] {
       active = rs.get(m.active),
       flatId = rs.get(m.flatId)
     )
-  }
 
-  def apply(m: SyntaxProvider[Meter])(rs: WrappedResultSet): Meter = {
+  def apply(m: SyntaxProvider[Meter])(rs: WrappedResultSet): Meter =
     apply(m.resultName)(rs)
-  }
 
   val m = Meter.syntax("m")
 
-  def findByFlatId(flatId: Int)(implicit session: DBSession = autoSession): Seq[Meter] =
+  def listByFlatId(flatId: Int)(implicit session: DBSession = autoSession): Seq[Meter] =
     sql"""select ${m.result.*} from ${Meter as m}
           where ${m.flatId} = ${flatId} AND ${m.active} = TRUE
       """.map(Meter(m)).list.apply()

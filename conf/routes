@@ -8,8 +8,12 @@ GET     /companies/:id                      controllers.Companies.show(id: Long)
 POST    /companies                          controllers.Companies.create
 DELETE  /companies/:id                      controllers.Companies.delete(id: Long)
 
-GET     /meters/byFlatId/:flatId            controllers.Meters.findByFlatId(flatId: Int)
+GET     /meters/byFlatId/:flatId            controllers.Meters.listByFlatId(flatId: Int)
 POST    /meterReadings                      controllers.Meters.saveReading()
+
+GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
+
+GET     /dwellers/findById/:personId        controllers.Dwellers.findById(personId: Int)
 
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 

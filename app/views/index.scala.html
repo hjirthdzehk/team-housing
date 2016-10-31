@@ -36,6 +36,7 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @measureInput()
+    @profile()
 
     <script type="text/javascript">
         new MainViewModel().run();
