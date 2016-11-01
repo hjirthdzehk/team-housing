@@ -52,3 +52,6 @@ sandbox/db
 
 .sbtserver/
 project/project/
+
+# Configs are personal for each developer
+conf/application.conf
