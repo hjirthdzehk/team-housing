@@ -10,7 +10,7 @@ case class Person(personId: Int,
                   paternalName: String,
                   registrationDate: DateTime) {
 
-  def findDweller: Option[Dweller] = Dweller.findById(personId)
+  def findDweller = Dweller.findById(personId)
 
 }
 
@@ -21,7 +21,7 @@ object Person extends SQLSyntaxSupport[Person] {
     new Person(
       personId = rs.get(p.personId),
       name = rs.get(p.name),
-      surname = rs.get(p.name),
+      surname = rs.get(p.surname),
       paternalName = rs.get(p.paternalName),
       registrationDate = rs.get(p.registrationDate)
     )

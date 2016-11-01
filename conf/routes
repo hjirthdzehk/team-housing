@@ -14,6 +14,7 @@ POST    /meterReadings                      controllers.Meters.saveReading()
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 
 GET     /dwellers/findById/:personId        controllers.Dwellers.findById(personId: Int)
+GET     /dwellers/:personId                 controllers.Dwellers.getProfileData(personId: Int)
 
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 

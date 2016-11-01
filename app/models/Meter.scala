@@ -9,7 +9,11 @@ case class Meter(meterId: Int,
                  title: String,
                  meterUnitId: Int,
                  active: Boolean,
-                 flatId: Int)
+                 flatId: Int) {
+  def listReadings = MeterReading.listByMeterId(meterId)
+
+  def getUnit = MeterUnit.get(meterUnitId)
+}
 
 
 object Meter extends SQLSyntaxSupport[Meter] {

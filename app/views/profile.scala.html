@@ -1,10 +1,10 @@
 <script type="text/html" id="profile-template">
     <div id="profile">
-        <!-- ko foreach: meters -->
+        <h1 data-bind="text: personName"></h1>
+        <!-- ko foreach: flats -->
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h1 data-bind="text: name"></h1>
-                <h2 data-bind="text: address"></h2>
+                <h2 data-bind="text: flatNo"></h2>
             </div>
             <div class="panel-body">
                 <table class="table">
@@ -18,7 +18,7 @@
                     <tbody data-bind="foreach: meters">
                         <tr>
                             <td data-bind="text: title"></td>
-                            <td><input data-bind="value: value,attr: {placeholder: title+' Measure'}" type="text" class="form-control"></td>
+                            <td data-bind="text: value"></td>
                             <td data-bind="text: unit"></td>
                         </tr>
                     </tbody>

@@ -10,7 +10,7 @@ case class Flat(flatId: Int,
                 cladrId: Int,
                 buildingId: Int) {
 
-  def listMeters: Seq[Meter] = Meter.listByFlatId(flatId)
+  def listMeters = Meter.listByFlatId(flatId)
 
 }
 
@@ -38,11 +38,13 @@ object Flat extends SQLSyntaxSupport[Flat] {
           where ${f.flatId} = ${flatId}
       """.map(Flat(f)).single().apply()
 
-  def listByPersonId(personId: Int)(implicit session: DBSession = autoSession): Seq[Flat] =
-    sql"""select ${f.result.*}, ${Person.p}
-          from ${Flat as f} natural join DwellerLivesInFlat
-          where ${Person.p.personId} = ${personId}
+  def listByPersonId(personId: Int)(implicit session: DBSession = autoSession): Seq[Flat] = {
+    import DwellerLivesInFlat.df
+    sql"""SELECT ${f.result.*}, ${df.result.*}
+          FROM ${Flat as f} NATURAL JOIN ${DwellerLivesInFlat as DwellerLivesInFlat.df}
+          WHERE ${df.personId} = ${personId}
        """.map(Flat(f)).list().apply()
+  }
 
 
 }

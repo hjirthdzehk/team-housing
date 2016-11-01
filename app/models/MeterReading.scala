@@ -36,4 +36,10 @@ object MeterReading extends SQLSyntaxSupport[MeterReading] {
 
     MeterReading(meterReadingId, value, date, paid, meterId)
   }
+
+  def listByMeterId(meterId: Int)(implicit session: DBSession = autoSession): Seq[MeterReading] =
+    sql"""select ${mr.result.*} from ${MeterReading as mr}
+          where ${mr.meterId} = ${meterId}
+       """.map(MeterReading(mr)).list().apply()
+
 }
