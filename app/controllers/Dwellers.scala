@@ -3,11 +3,12 @@ package controllers
 import javax.inject.Inject
 
 import com.github.tototoshi.play2.json4s.native.Json4s
+import models.Person._
 import models._
 import org.json4s.{DefaultFormats, Extraction}
 import org.json4s.ext.JodaTimeSerializers
 import play.api.mvc.{Action, Controller}
-
+import scalikejdbc._
 
 case class MeterReadingData(date: String,
                             value: String)
@@ -43,18 +44,30 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
     )
   }
 
-  def getProfileData(personId: Int) = Action {
-    val dweller = Dweller.findById(personId).get
-    val person = dweller.getPerson
-    val metersByFlat = dweller.listFlats.map(flat => {
-      flat.flatNumber.toString -> flat.listMeters
-        .map(MeterData.fromMeter)
-    }).toMap
+  def getProfileData(personId: Int)(implicit session: DBSession = autoSession) = Action {
+    val (d, p, f, m, df) = (Dweller.d, Person.p, Flat.f, Meter.m, DwellerLivesInFlat.df)
+    val query = sql"""select ${d.result.*}, ${p.result.*}, ${f.result.*}, ${m.result.*}
+          from ${Dweller as d} natural join ${Person as p}
+            natural join ${DwellerLivesInFlat as df}
+            natural join ${Flat as f}
+            natural join ${Meter as m}
+          where ${d.personId} = ${personId}
+       """.map(rs => {
+      (Person(p)(rs), Flat(f)(rs), Meter(m)(rs))
+    }).list().apply()
 
     Ok(Extraction.decompose(
-      ProfileData(
-        s"${person.name} ${person.surname}",
-        metersByFlat)))
+      query.groupBy(_._1)
+        .map{ case (person, tail) => {
+          ProfileData(
+            s"${person.name} ${person.surname}",
+            tail.groupBy(_._2)
+              .map{ case (flat, tail) =>
+                flat.flatNumber.toString ->
+                  tail.filter(_._2 == flat).map(_._3).map(MeterData.fromMeter)
+              }
+          )
+        }}.head))
   }
 
 }

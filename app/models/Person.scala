@@ -33,7 +33,7 @@ object Person extends SQLSyntaxSupport[Person] {
 
   def findById(personId: Int)(implicit session: DBSession = autoSession): Option[Person] =
     sql"""select ${p.result.*} from ${Person as p}
-         where ${p.personId} = ${personId}
-       """.map(Person(p)).single().apply()
+          where ${p.personId} = ${personId}
+      """.map(Person(p)).single().apply()
 
 }
