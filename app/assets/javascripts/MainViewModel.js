@@ -11,25 +11,25 @@ var MainViewModel = function() {
     };
 
     var app = Sammy('#main', function() {
-        this.get('#/measuresInput', function() {
-            $.get('/meters/byFlatId/1').then(function(groups) {
-                var viewModel = new MeasuresInputViewModel(groups);
+        this.get('#/readings/submit', function() {
+            $.get('/dwellers/1').then(function(profileData) {
+                var viewModel = new MetersViewModel(profileData, true);
                 swapTemplate({
-                    name: 'measures-input-template',
+                    name: 'meters-template',
                     model: viewModel
                 });
             });
         });
 
-        this.get('#/profile', function() {
+        this.get('#/meters', function() {
             $.get('/dwellers/1').then(function(profileData) {
-                var viewModel = new ProfileViewModel(profileData);
+                var viewModel = new MetersViewModel(profileData, false);
                 swapTemplate({
-                    name: 'profile-template',
+                    name: 'meters-template',
                     model: viewModel
                 });
             });
-        })
+        });
     });
 
     this.run = function() {
