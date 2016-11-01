@@ -9,7 +9,7 @@ POST    /companies                          controllers.Companies.create
 DELETE  /companies/:id                      controllers.Companies.delete(id: Long)
 
 POST    /meterReadings                      controllers.Meters.saveReading()
-GET     /getReadingsCosts/:flatId           controllers.Meters.getReadingsCosts(flatId: Int)
+GET     /getReadingsCosts                   controllers.Meters.getReadingsCosts(meterId: Int, dateFrom: String, dateTo: String)
 
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 

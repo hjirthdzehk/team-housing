@@ -17,27 +17,33 @@ import models.Meter.autoSession
 class Meters @Inject() (json4s: Json4s) extends Controller {
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
 
-  def getReadingsCosts(flatId: Int)(implicit session: DBSession = autoSession) = Action {
-    val (mr, m, r) = (MeterReading.mr, Meter.m, Rate.r)
+  def getReadingsCosts(meterId: Int,
+                       dateFromStr: String,
+                       dateToStr: String)(implicit session: DBSession = autoSession) = Action {
+    val (mr, r) = (MeterReading.mr, Rate.r)
+
+    val dateFrom = DateTime.parse(dateFromStr)
+    val dateTo = DateTime.parse(dateToStr)
 
     val query =
       sql"""
-           select ${m.meterId}, ${mr.date}, ${mr.value} * ${r.value} as cost
+           select ${mr.meterId}, ${mr.date}, ${mr.value} * ${r.value} as cost
            from ${MeterReading as mr}
-            natural join ${Meter as m}
             natural join ${Rate as r}
-           where ${m.flatId} = ${flatId}
-            and ${r.dateFrom} <= ${mr.date}
+           where ${r.dateFrom} <= ${mr.date}
             and ${r.dateTo} >= ${mr.date}
+            and ${mr.date} >= ${dateFrom}
+            and ${mr.date} <= ${dateTo}
          """.map(rs => (
-        rs.get(m.meterId): Int,
+        rs.get(mr.meterId): Int,
         rs.get(mr.date): DateTime,
         rs.get("cost"): Int
       )).list().apply()
 
     val result = query.groupBy(_._1)
-      .map{case (meterId, everything) =>
+      .map{case (_, everything) =>
         meterId -> everything.map{ case (_, date, cost) => (date, cost) }.distinct }
+      .head
 
     Ok(Extraction.decompose(result))
   }
