@@ -10,8 +10,8 @@ case class MeterReading(meterReadingId: Long,
                         meterId: Int)
 
 object MeterReading extends SQLSyntaxSupport[MeterReading] {
-  def apply(mr: SyntaxProvider[MeterReading])(rs: WrappedResultSet): MeterReading =
-    apply(mr.resultName)(rs)
+  def apply(mr: SyntaxProvider[MeterReading]): (WrappedResultSet) => MeterReading =
+    apply(mr.resultName)
 
   def apply(mr: ResultName[MeterReading])(rs: WrappedResultSet): MeterReading =
     MeterReading(
