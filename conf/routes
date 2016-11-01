@@ -10,6 +10,7 @@ DELETE  /companies/:id                      controllers.Companies.delete(id: Lon
 
 GET     /meters/byFlatId/:flatId            controllers.Meters.listByFlatId(flatId: Int)
 POST    /meterReadings                      controllers.Meters.saveReading()
+GET     /getReadingsCosts/:flatId           controllers.Meters.getReadingsCosts(flatId: Int)
 
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 

@@ -10,6 +10,8 @@ import org.json4s.ext.JodaTimeSerializers
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import scalikejdbc._
+import models.Meter.autoSession
 
 case class MeterViewModel(id: Integer,
                           title: String,
@@ -34,6 +36,31 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
               MeterViewModel(meterId, title, MeterUnit.get(meterUnitId).description)}
           )
         }))
+  }
+
+  def getReadingsCosts(flatId: Int)(implicit session: DBSession = autoSession) = Action {
+    val (mr, m, r) = (MeterReading.mr, Meter.m, Rate.r)
+
+    val query =
+      sql"""
+           select ${m.meterId}, ${mr.date}, ${mr.value} * ${r.value} as cost
+           from ${MeterReading as mr}
+            natural join ${Meter as m}
+            natural join ${Rate as r}
+           where ${m.flatId} = ${flatId}
+            and ${r.dateFrom} <= ${mr.date}
+            and ${r.dateTo} >= ${mr.date}
+         """.map(rs => (
+        rs.get(m.meterId): Int,
+        rs.get(mr.date): DateTime,
+        rs.get("cost"): Int
+      )).list().apply()
+
+    val result = query.groupBy(_._1)
+      .map{case (meterId, everything) =>
+        meterId -> everything.map{ case (_, date, cost) => (date, cost) }.distinct }
+
+    Ok(Extraction.decompose(result))
   }
 
   case class MeterReadingForm(meterId: Int,
