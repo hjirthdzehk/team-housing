@@ -16,15 +16,15 @@ case class MeterReadingData(date: String,
 object MeterReadingData {
   def fromMeterReading(mr: MeterReading) = MeterReadingData(mr.date.toString, mr.value.toString)
 }
-case class MeterData(title: String,
-                     readings: Seq[MeterReadingData],
+case class MeterData(id:Int,
+                     title: String,
                      unit: String)
 
 object MeterData {
   def fromMeter(m: Meter) =
     MeterData(
+      m.meterId,
       m.title,
-      m.listReadings.map(MeterReadingData.fromMeterReading),
       m.getUnit.description
     )
 }

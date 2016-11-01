@@ -1,0 +1,46 @@
+<script type="text/html" id="meters-template">
+    <h1 data-bind="text: personName"></h1>
+    <div class="form-group" data-bind="if: canInputReadings">
+        <label for="date">Date</label>
+        <div class="input-group date">
+            <input type="text" class="form-control" id="date" data-bind="datepicker: {},value:date">
+            <div class="input-group-addon">
+                <span class="glyphicon glyphicon-th"></span>
+            </div>
+        </div>
+    </div>
+    <!-- ko foreach: flats -->
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h2 data-bind="text: flatNo"></h2>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Meter name</th>
+                        <th data-bind="if: $parent.canInputReadings">Measure value</th>
+                        <th>Meter unit</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: meters">
+                    <tr>
+                        <td data-bind="text: title"></td>
+                        <td data-bind="if: $parents[1].canInputReadings">
+                            <input data-bind="value: value, attr: {placeholder: title + ' Measure'}" type="text" class="form-control">
+                        </td>
+                        <td data-bind="text: unit"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /ko -->
+    <div class="container" data-bind="if: canInputReadings">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <button type="button" class="btn btn-success btn-lg btn-block" data-bind="click: submit">Submit measures</button>
+            </div>
+        </div>
+    </div>
+</script>

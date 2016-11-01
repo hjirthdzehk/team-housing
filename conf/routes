@@ -8,7 +8,6 @@ GET     /companies/:id                      controllers.Companies.show(id: Long)
 POST    /companies                          controllers.Companies.create
 DELETE  /companies/:id                      controllers.Companies.delete(id: Long)
 
-GET     /meters/byFlatId/:flatId            controllers.Meters.listByFlatId(flatId: Int)
 POST    /meterReadings                      controllers.Meters.saveReading()
 
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
