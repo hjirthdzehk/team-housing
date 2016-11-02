@@ -38,10 +38,25 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
+
+        this.get('#/history', function () {
+            $.get('/history/byFlatId/1').then(function (historyGroups) {
+                var viewModel = new MeasurementsHistoryViewModel(historyGroups);
+                swapTemplate({
+                    name: 'measurements-history-template',
+                    model: viewModel
+                })
+            })
+        })
     });
 
     this.run = function() {
         app.run('#/measuresInput');
     };
+    $(".nav a").on("click", function(){
+        $(".nav").find(".active").removeClass("active");
+        $(this).parent().addClass("active");
+    });
+
     ko.applyBindings(self, $('#main')[0]);
 };
