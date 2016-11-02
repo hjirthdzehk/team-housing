@@ -30,7 +30,7 @@ var MainViewModel = function() {
                 });
             });
         });
-
+        
         this.get('#/meters/statistics', function() {
             var viewModel = new MetersStatisticsViewModel();
             swapTemplate({
@@ -38,6 +38,16 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
+
+        this.get('#/history', function () {
+            $.get('/history/byFlatId/1').then(function (historyGroups) {
+                var viewModel = new MeasurementsHistoryViewModel(historyGroups);
+                swapTemplate({
+                    name: 'measurements-history-template',
+                    model: viewModel
+                })
+            })
+        })
     });
 
     this.run = function() {
