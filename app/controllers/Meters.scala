@@ -3,49 +3,85 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import com.github.tototoshi.play2.json4s.native._
-import models._
+import models.{MeterReading, _}
 import org.joda.time.DateTime
-import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json.Json;
 import scalikejdbc._
 import models.Meter.autoSession
 
+case class MeterReadingCost(title: String,
+                            date: DateTime,
+                            cost: BigDecimal
+                           )
+
+object MeterReadingCost extends SQLSyntaxSupport[MeterReadingCost] {
+  def apply(mr: SyntaxProvider[MeterReading], m: SyntaxProvider[Meter]): (WrappedResultSet) => MeterReadingCost =
+    apply(mr.resultName, m.resultName)
+
+  def apply(mr: ResultName[MeterReading], m: ResultName[Meter])(rs: WrappedResultSet): MeterReadingCost =
+    MeterReadingCost(
+      rs.get(m.title): String,
+      rs.get(mr.date): DateTime,
+      rs.get("cost"): BigDecimal
+    )
+}
+
+case class MeterListItem(title: String,
+                         meterId: Int
+                        )
+
+object MeterListItem extends SQLSyntaxSupport[Meter] {
+  def apply( m: SyntaxProvider[Meter]): (WrappedResultSet) => MeterListItem =
+    apply(m.resultName)
+
+  def apply(m: ResultName[Meter])(rs: WrappedResultSet): MeterListItem =
+    MeterListItem(
+      rs.get(m.title): String,
+      rs.get(m.meterId): Int
+    )
+}
+
 @Singleton
 class Meters @Inject() (json4s: Json4s) extends Controller {
+  import org.json4s._
+
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
 
-  def getReadingsCosts(meterId: Int,
-                       dateFromStr: String,
-                       dateToStr: String)(implicit session: DBSession = autoSession) = Action {
-    val (mr, r) = (MeterReading.mr, Rate.r)
+  def getMeters(flatId: Int)(implicit session: DBSession = autoSession) = Action {
+    val m = Meter.m
+    var query =
+      sql"""
+            select ${m.result.title}, ${m.result.meterId}
+            from ${Meter as m}
+            where ${m.flatId} = ${flatId}
+            """.map(MeterListItem(m)).list.apply()
+    implicit val meterListItemFormat = Json.format[MeterListItem]
+    Ok(Json.obj("meterListItems" -> query))
+  }
 
-    val dateFrom = DateTime.parse(dateFromStr)
-    val dateTo = DateTime.parse(dateToStr)
+  def getReadingsCosts(meterId: Int,
+                       dateFromStr: Option[String],
+                       dateToStr: Option[String])(implicit session: DBSession = autoSession) = Action {
+    val (mr, r, m) = (MeterReading.mr, Rate.r, Meter.m)
+
+    val dateFrom = DateTime.parse(dateFromStr.get)
+    val dateTo = DateTime.parse(dateToStr.get)
 
     val query =
       sql"""
-           select ${mr.meterId}, ${mr.date}, ${mr.value} * ${r.value} as cost
-           from ${MeterReading as mr}
-            natural join ${Rate as r}
-           where ${r.dateFrom} <= ${mr.date}
-            and ${r.dateTo} >= ${mr.date}
-            and ${mr.date} >= ${dateFrom}
-            and ${mr.date} <= ${dateTo}
-         """.map(rs => (
-        rs.get(mr.meterId): Int,
-        rs.get(mr.date): DateTime,
-        rs.get("cost"): Int
-      )).list().apply()
-
-    val result = query.groupBy(_._1)
-      .map{case (_, everything) =>
-        meterId -> everything.map{ case (_, date, cost) => (date, cost) }.distinct }
-      .head
-
-    Ok(Extraction.decompose(result))
+          select ${m.result.title}, ${mr.result.date}, mr.value * r.value as cost
+          from ${MeterReading as mr}, ${Meter as m} , ${Rate as r}
+          where ${m.meterId} = ${mr.meterId} and ${m.meterUnitId} = ${r.meterUnitId}
+          and ${r.dateFrom} <= ${mr.date} and ${r.dateTo} >= ${mr.date} and ${mr.paid} = false and ${m.meterId}=${meterId}
+          and ${mr.date} >= ${dateFrom} and ${mr.date} <= ${dateTo}
+          order by date desc;
+         """.map(MeterReadingCost(mr, m)).list.apply()
+    implicit val meterReadingCostFormat = Json.format[MeterReadingCost]
+    Ok(Json.obj("readingCosts" -> query))
   }
 
   case class MeterReadingForm(meterId: Int,

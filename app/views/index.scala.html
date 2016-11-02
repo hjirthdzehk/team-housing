@@ -15,9 +15,12 @@
     <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.en-GB.min.js'></script>
     <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
     <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/sammy.js/0.7.6/sammy.min.js'></script>
+    <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js'></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ko-binding-handlers.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MainViewModel.js")"></script>
+
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -29,6 +32,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#/readings/submit">Measure Input</a></li>
                 <li><a href="#/meters">Profile</a></li>
+                <li><a href="#/meters/statistics">Statistics</a></li>
             </ul>
         </div>
     </nav>
@@ -36,6 +40,7 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
+    @metersStatistic()
 
     <script type="text/javascript">
         new MainViewModel().run();

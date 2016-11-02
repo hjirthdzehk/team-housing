@@ -30,6 +30,14 @@ var MainViewModel = function() {
                 });
             });
         });
+
+        this.get('#/meters/statistics', function() {
+            var viewModel = new MetersStatisticsViewModel();
+            swapTemplate({
+                name:'meters-statistic-template',
+                model: viewModel
+            });
+        });
     });
 
     this.run = function() {
