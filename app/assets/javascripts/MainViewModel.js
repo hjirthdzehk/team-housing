@@ -30,7 +30,7 @@ var MainViewModel = function() {
                 });
             });
         });
-        
+
         this.get('#/meters/statistics', function() {
             var viewModel = new MetersStatisticsViewModel();
             swapTemplate({
@@ -53,5 +53,10 @@ var MainViewModel = function() {
     this.run = function() {
         app.run('#/measuresInput');
     };
+    $(".nav a").on("click", function(){
+        $(".nav").find(".active").removeClass("active");
+        $(this).parent().addClass("active");
+    });
+
     ko.applyBindings(self, $('#main')[0]);
 };
