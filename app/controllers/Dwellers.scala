@@ -40,7 +40,7 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
 
   def findById(personId: Int) = Action {
     Ok(Extraction.decompose(
-      Person.findById(personId))
+      Person.find(personId))
     )
   }
 
