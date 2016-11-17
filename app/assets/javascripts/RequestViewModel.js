@@ -1,4 +1,4 @@
-var RequestViewModel = function() {
+var RequestViewModel = function(requestId) {
     var self = this;
     self.description = ko.observable('My toilet is broken! Im very, very, dissapointed!');
     self.nextVisitDate = ko.observable(moment('11/20/2016').format('MMM Do YYYY'));
@@ -12,7 +12,7 @@ var RequestViewModel = function() {
             cost: 1500,
             assigned: 'Mr. Smith'
         }],
-        totalCost: 1500})
+        totalCost: 1500});
     self.comments = ko.observableArray([{
         date: moment('11/25/2016').format('MMM Do YYYY'),
         person: 'Oleg Kulaev',
