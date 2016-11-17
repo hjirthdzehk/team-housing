@@ -68,9 +68,10 @@ var MainViewModel = function() {
         });
 
         this.get('admin#/request', function() {
+            var viewModel = new RequestViewModel();
             swapTemplate({
                 name:'request-template',
-                model: {}
+                model: viewModel
             });
         });
     });
