@@ -1,0 +1,107 @@
+<script type="text/html" id="request-template">
+<div class="container">
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Request info</div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="description">Description</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                            </div>
+                            <textarea id="description" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="next-visit-date">Next visit</label>
+                        <div class="col-md-10 input-group date">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                            <input type="text" class="form-control" id="next-visit-date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="request-status">Status</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-stats"></span>
+                            </div>
+                            <input type="text" class="form-control" id="request-status">
+                        </div>
+                    </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="request-rating">Rating</label>
+                    <div class="col-md-10 input-group">
+                        <input id="rate1" class="icon-checkbox" type="radio" value="1" name="rating" />
+                        <label for="rate1">
+                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                            <span class='glyphicon glyphicon-star checked text-danger'></span>
+                        </label>
+                        <input id="rate2" class="icon-checkbox" type="radio" value="2" name="rating" />
+                        <label for="rate2">
+                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                            <span class='glyphicon glyphicon-star checked text-danger'></span>
+                        </label>
+                        <input id="rate3" class="icon-checkbox" type="radio" value="3" name="rating" />
+                        <label for="rate3">
+                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                            <span class='glyphicon glyphicon-star checked text-danger'></span>
+                        </label>
+                        <input id="rate4" class="icon-checkbox" type="radio" value="4" name="rating" />
+                        <label for="rate4">
+                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                            <span class='glyphicon glyphicon-star checked text-danger'></span>
+                        </label>
+                        <input id="rate5" class="icon-checkbox" type="radio" value="5" name="rating" />
+                        <label for="rate5">
+                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                            <span class='glyphicon glyphicon-star checked text-danger'></span>
+                        </label>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Visits</div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Scheduled time</th>
+                            <th>Start time</th>
+                            <th>End time</th>
+                            <th>Cost</th>
+                            <th>Assigned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>16.11.2016</td>
+                            <td>22:44</td>
+                            <td>23:15</td>
+                            <td>1500R</td>
+                            <td>Mr. Smith</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4>Total cost: 1500R</h4>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Comments</div>
+            <div class="panel-body">
+                <input class="btn btn-primary" type="button" value="New comment">
+                <div>
+                    <span><b>16.11.2016</b></span>
+                    <span><b>Oleg Kulaev</b></span>:
+                    <p>Vse govno, peredelyvai!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</script>

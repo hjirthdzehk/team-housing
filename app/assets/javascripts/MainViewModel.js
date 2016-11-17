@@ -66,10 +66,17 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
+
+        this.get('admin#/request', function() {
+            swapTemplate({
+                name:'request-template',
+                model: {}
+            });
+        });
     });
 
-    this.run = function() {
-        app.run('#/measuresInput');
+    this.run = function(startUrl) {
+        app.run(startUrl);
     };
     $(".nav a").on("click", function(){
         $(".nav").find(".active").removeClass("active");
