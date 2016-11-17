@@ -9,14 +9,13 @@ import org.json4s.ext.JodaTimeSerializers
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
-import play.api.libs.json.Json;
+import play.api.libs.json.Json
 import scalikejdbc._
 import models.Meter.autoSession
 
 case class MeterReadingCost(title: String,
                             date: DateTime,
-                            cost: BigDecimal
-                           )
+                            cost: BigDecimal)
 
 object MeterReadingCost extends SQLSyntaxSupport[MeterReadingCost] {
   def apply(mr: SyntaxProvider[MeterReading], m: SyntaxProvider[Meter]): (WrappedResultSet) => MeterReadingCost =

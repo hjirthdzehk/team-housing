@@ -12,7 +12,7 @@ var MainViewModel = function() {
 
     var app = Sammy('#main', function() {
         this.get('#/readings/submit', function() {
-            $.get('/dwellers/1').then(function(profileData) {
+            $.get('/dwellers/show/1').then(function(profileData) {
                 var viewModel = new MetersViewModel(profileData, true);
                 swapTemplate({
                     name: 'meters-template',
@@ -22,7 +22,7 @@ var MainViewModel = function() {
         });
 
         this.get('#/meters', function() {
-            $.get('/dwellers/1').then(function(profileData) {
+            $.get('/dwellers/show/1').then(function(profileData) {
                 var viewModel = new MetersViewModel(profileData, false);
                 swapTemplate({
                     name: 'meters-template',
@@ -47,7 +47,25 @@ var MainViewModel = function() {
                     model: viewModel
                 })
             })
-        })
+        });
+
+        this.get('#/allDwellers', function () {
+            $.get('/dwellers/listAll').then(function (historyGroups) {
+                var viewModel = new ListDwellersViewModel(historyGroups);
+                swapTemplate({
+                    name: 'list-dwellers-template',
+                    model: viewModel
+                })
+            })
+        });
+
+        this.get('#/signUp', function () {
+            var viewModel = new SignUpModel();
+            swapTemplate({
+                name: 'sign-up-template',
+                model: viewModel
+            });
+        });
     });
 
     this.run = function() {

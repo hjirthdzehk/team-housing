@@ -5,10 +5,10 @@ import org.joda.time.LocalDate
 
 case class Person(
   personId: Int,
-  name: Option[String] = None,
-  surname: Option[String] = None,
-  paternalName: Option[String] = None,
-  registrationDate: Option[LocalDate] = None) {
+  name: String,
+  surname: String,
+  paternalName: String,
+  registrationDate: LocalDate = LocalDate.now()) {
 
   def findDweller = Dweller.find(personId)
 
@@ -67,10 +67,10 @@ object Person extends SQLSyntaxSupport[Person] {
   }
 
   def create(
-    name: Option[String] = None,
-    surname: Option[String] = None,
-    paternalName: Option[String] = None,
-    registrationDate: Option[LocalDate] = None)(implicit session: DBSession = autoSession): Person = {
+    name: String,
+    surname: String,
+    paternalName: String)(implicit session: DBSession = autoSession): Person = {
+    val registrationDate = LocalDate.now()
     val generatedKey = sql"""
       insert into ${Person.table} (
         ${column.name},

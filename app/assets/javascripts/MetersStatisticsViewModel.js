@@ -9,7 +9,7 @@ var MetersStatisticsViewModel = function() {
     self.selectedMeter = ko.observable(self.meters()[1]);
     self.metersCostData = ko.observableArray([]);
     self.refresh = function() {
-        $.get('/getReadingsCosts/'+self.selectedMeter().meterId, {
+        $.get('/getReadingsCosts/' + self.selectedMeter().meterId, {
             dateFrom: self.from(),
             dateTo: self.to()
         }).then(function(data) {

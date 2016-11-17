@@ -16,7 +16,9 @@ GET     /meters/:flatId                     controllers.Meters.getMeters(flatId:
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 
 GET     /dwellers/findById/:personId        controllers.Dwellers.findById(personId: Int)
-GET     /dwellers/:personId                 controllers.Dwellers.getProfileData(personId: Int)
+GET     /dwellers/show/:personId            controllers.Dwellers.getProfileData(personId: Int)
+GET     /dwellers/listAll                   controllers.Dwellers.listAll()
+POST    /dwellers/signUp                    controllers.Dwellers.signUp()
 
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)

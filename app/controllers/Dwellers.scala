@@ -3,12 +3,14 @@ package controllers
 import javax.inject.Inject
 
 import com.github.tototoshi.play2.json4s.native.Json4s
-import models.Person._
-import models._
 import org.json4s.{DefaultFormats, Extraction}
-import org.json4s.ext.JodaTimeSerializers
 import play.api.mvc.{Action, Controller}
+import models.{MeterReading, _}
+import org.json4s.ext.JodaTimeSerializers
+import play.api.data.Form
+import play.api.data.Forms._
 import scalikejdbc._
+import models.Meter.autoSession
 
 case class MeterReadingData(date: String,
                             value: String)
@@ -43,6 +45,48 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
       Person.find(personId))
     )
   }
+
+  case class SignUpForm(name: String,
+                        surname: String,
+                        paternalName: String)
+
+  val signUpForm = Form(
+    mapping(
+      "name" -> text,
+      "surname" -> text,
+      "paternalName" -> text
+    )(SignUpForm.apply)(SignUpForm.unapply)
+  )
+
+  def signUp() =
+    Action { implicit req =>
+      signUpForm.bindFromRequest.fold(
+        formWithErrors => BadRequest("Error"), // TODO better error handling
+        form => {
+          val person = Person.create(
+            form.name,
+            form.surname,
+            form.paternalName)
+          Dweller.create(person.personId)
+
+          Ok(Extraction.decompose(person))
+        }
+      )
+  }
+
+  def listAll()(implicit session: DBSession = autoSession) =
+    Action {
+      import models.Dweller.d
+      import models.Person.p
+
+      val dwellers =
+        sql"""
+             select ${p.result.*} from ${Dweller as d}
+             natural join ${Person as p}
+           """.map(Person(p.resultName)).list().apply()
+
+      Ok(Extraction.decompose(dwellers))
+    }
 
   def getProfileData(personId: Int)(implicit session: DBSession = autoSession) = Action {
     val (d, p, f, m, df) = (Dweller.d, Person.p, Flat.f, Meter.m, DwellerLivesInFlat.df)

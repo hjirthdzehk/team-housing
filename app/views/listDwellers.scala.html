@@ -1,0 +1,27 @@
+<script type="text/html" id="list-dwellers-template">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Dwellers in the System</div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>id</td>
+                        <td>Name</td>
+                        <td>Surname</td>
+                        <td>Paternal Name</td>
+                        <td>Registration Date</td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: persons">
+                    <td data-bind="text: personId"></td>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: surname"></td>
+                    <td data-bind="text: paternalName"></td>
+                    <td>
+                        <span data-bind="text: registrationDate.day"></span>-<span data-bind="text: registrationDate.month"></span>-<span data-bind="text: registrationDate.year"></span>
+                    </td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
