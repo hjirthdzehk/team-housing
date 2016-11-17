@@ -68,10 +68,12 @@ var MainViewModel = function() {
         });
 
         this.get('admin#/request/:requestId', function() {
-            var viewModel = new RequestViewModel(this.params['requestId']);
-            swapTemplate({
-                name:'request-template',
-                model: viewModel
+            $.get('/request/'+this.params['requestId']).then(function(requestModel) {
+                var viewModel = new RequestViewModel(requestModel);
+                swapTemplate({
+                    name:'request-template',
+                    model: viewModel
+                });
             });
         });
     });

@@ -1,9 +1,9 @@
-var RequestViewModel = function(requestId) {
+var RequestViewModel = function(requestModel) {
     var self = this;
-    self.description = ko.observable('My toilet is broken! Im very, very, dissapointed!');
+    self.description = ko.observable(requestModel.description);
     self.nextVisitDate = ko.observable(moment('11/20/2016').format('MMM Do YYYY'));
-    self.status = ko.observable(3);
-    self.rating = ko.observable(2);
+    self.status = ko.observable(requestModel.status);
+    self.rating = ko.observable(requestModel.rating);
     self.visits = ko.observable({
         visits: [{
             scheduledTime: moment('11/25/2016').format('MMM Do YYYY'),

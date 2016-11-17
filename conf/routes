@@ -22,5 +22,7 @@ GET     /dwellers/show/:personId            controllers.Dwellers.getProfileData(
 GET     /dwellers/listAll                   controllers.Dwellers.listAll()
 POST    /dwellers/signUp                    controllers.Dwellers.signUp()
 
+GET     /request/:id                        controllers.ServiceRequests.get(id: Long)
+
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)

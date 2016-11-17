@@ -48,6 +48,11 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
             .map(ServiceRequest(sr)).single().apply().get
     }
 
+    def get(requestId: Long)(implicit session: DBSession = autoSession) : ServiceRequest = {
+      sql"""select ${sr.result.*} from ${ServiceRequest as sr} where ${sr.id} = ${requestId}"""
+        .map(ServiceRequest(sr)).single().apply().get
+    }
+
     def findAllForFlat(flatId: Long)
                       (implicit session: DBSession = autoSession): List[ServiceRequest] = {
         import RequestToFlat.rtf

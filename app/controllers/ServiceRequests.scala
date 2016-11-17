@@ -3,7 +3,7 @@ package controllers
 import models.ServiceRequest
 import javax.inject.Inject
 
-import com.github.tototoshi.play2.json4s.Json4s
+import com.github.tototoshi.play2.json4s.native._
 import org.joda.time.DateTime
 import org.json4s.{DefaultFormats, Extraction}
 import org.json4s.ext.JodaTimeSerializers
@@ -16,7 +16,9 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     import json4s._
 
     implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-
+      def get(requestId: Long) = Action {
+          Ok(Extraction.decompose(ServiceRequest.get(requestId)))
+      }
 //    def all(flatId: Long) = Action {
 //        var requests = ServiceRequest.findAllForFlat(flatId)
 //        var nextVisits = Seq[DateTime]
