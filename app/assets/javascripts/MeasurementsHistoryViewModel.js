@@ -16,8 +16,8 @@ var MeasurementsHistoryViewModel = function (meterHistory) {
                             return {
                                 value: ko.observable(meterReading.value),
                                 unit: ko.observable(meter.meterUnitTitle),
-                                date: ko.observable(meterReading.date),
-                                paid: ko.observable(meterReading.paid ? "Paid" : "Not paid"),
+                                date: ko.observable(moment(meterReading.date).format('MMM-DD-YYYY HH:MM')),
+                                paid: ko.observable(meterReading.paid ? "Paid" : "Not paid")
                             }
                         }
                     ))
