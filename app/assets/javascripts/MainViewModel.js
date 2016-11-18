@@ -68,10 +68,10 @@ var MainViewModel = function() {
         });
 
         this.get('admin#/request/:requestId', function() {
-
-            $.when($.get('/request/'+this.params['requestId']),
-                $.get('/api/visited/'+this.params['requestId']),
-                $.get('/api/commented/'+this.params['requestId']))
+            var requestId = this.params['requestId'];
+            $.when($.get('/api/request/'+requestId),
+                $.get('/api/visited/'+requestId),
+                $.get('/api/commented/'+requestId))
              .then(function(requestModel, visits, comments) {
                 var viewModel = new RequestViewModel(requestModel[0], visits[0], comments[0]);
                 swapTemplate({
