@@ -3,7 +3,7 @@
   */
 package controllers
 
-import models.{Flat, ServiceRequest}
+import models.{Flat, ServiceRequest, Visited}
 import javax.inject.{Inject, Singleton}
 
 import com.github.tototoshi.play2.json4s.native._
@@ -20,7 +20,7 @@ case class ServiceRequestViewModel(
     rating: Option[Int],
     status: Option[Int],
     nextVisitDate: Option[DateTime],
-    totalCost: Float = 0.0f
+    totalCost: Double = 0.0d
 )
 
 case class RequestsInfo(sreqs: Seq[ServiceRequestViewModel],
@@ -31,6 +31,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     import json4s._
 
     implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
+
       def get(requestId: Long) = Action {
           val serviceRequest = ServiceRequest.get(requestId)
           val nextVisitDate = ServiceRequest.findNextVisitDate(requestId)
@@ -80,7 +81,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
                 rating = sr.rating,
                 status = sr.status,
                 nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
-                totalCost = ServiceRequest.getTotalCost(sr.id)))
+                totalCost = Visited.getTotalCost(sr.id)))
 
         Ok(Extraction.decompose(
             RequestsInfo(serviceReqs, flatNumber)

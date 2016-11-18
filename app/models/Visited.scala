@@ -60,13 +60,14 @@ object Visited extends SQLSyntaxSupport[Visited] {
 
     def applyToDouble(rs: WrappedResultSet): Double = rs.get("totalCosts")
     def getTotalCost(requestId: Long)
-                    (implicit session: DBSession = autoSession): Option[Double] = {
-      sql"""
+                    (implicit session: DBSession = autoSession): Double = {
+      val resultOption = sql"""
            SELECT SUM(costs) AS totalCosts
            FROM ${Visited as v}
            GROUP BY ${v.serviceRequsetId}
            HAVING ${v.serviceRequsetId}=${requestId}
            """
         .map(applyToDouble).single().apply()
+        if (resultOption.isDefined) resultOption.get else 0.0
     }
 }

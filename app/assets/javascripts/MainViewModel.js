@@ -67,7 +67,7 @@ var MainViewModel = function() {
             });
         });
 
-        this.get('admin#/request/:requestId', function() {
+        this.get('#/serviceRequests/:requestId', function() {
             var requestId = this.params['requestId'];
             var isEditable = true; //check if logined user is admin
             var personId = 1;

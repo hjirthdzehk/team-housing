@@ -84,17 +84,6 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
            ORDER BY ${v.scheduleTime} DESC
            LIMIT 1
            """
-                .map(rs => rs.jodaDateTimeOpt(v.resultName.scheduleTime)).single().apply().get
-    }
-
-    def getTotalCost(requestId: Long)
-                    (implicit session: DBSession = autoSession): Float = {
-        import Visited.v
-        sql"""
-           SELECT SUM(${v.costs})
-           FROM ${Visited as v}
-           WHERE ${v.serviceRequsetId} = ${requestId}
-           """
-            .map(rs => rs.float(1)).single().apply().get
+              .map(rs => rs.jodaDateTimeOpt(v.resultName.scheduleTime)).single().apply().get
     }
 }

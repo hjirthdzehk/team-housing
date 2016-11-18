@@ -20,8 +20,7 @@ class Visiteds @Inject()(json4s: Json4s) extends Controller {
     implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
     def all(requestId: Long) = Action {
         val visits = Visited.findAll(requestId)
-        val totalCostOption = Visited.getTotalCost(requestId)
-        val totalCost = if (totalCostOption.isDefined) totalCostOption.get else 0.0
+        val totalCost = Visited.getTotalCost(requestId)
         Ok(Extraction.decompose(VisitedViewModel(totalCost, visits)))
     }
 }
