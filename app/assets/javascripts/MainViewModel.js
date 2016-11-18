@@ -68,8 +68,10 @@ var MainViewModel = function() {
         });
 
         this.get('admin#/request/:requestId', function() {
-            $.get('/request/'+this.params['requestId']).then(function(requestModel) {
-                var viewModel = new RequestViewModel(requestModel);
+
+            $.when($.get('/request/'+this.params['requestId']), $.get('/api/visited/'+this.params['requestId']))
+             .then(function(requestModel, visits) {
+                var viewModel = new RequestViewModel(requestModel[0], visits[0]);
                 swapTemplate({
                     name:'request-template',
                     model: viewModel

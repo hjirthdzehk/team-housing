@@ -85,16 +85,14 @@
                             <th>Start time</th>
                             <th>End time</th>
                             <th>Cost</th>
-                            <th>Assigned</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr data-bind="foreach: visits">
+                    <tbody data-bind="foreach: visits">
+                        <tr>
                             <td data-bind="text: scheduledTime"></td>
                             <td data-bind="text: startTime"></td>
                             <td data-bind="text: endTime"></td>
                             <td data-bind="text: cost"></td>
-                            <td data-bind="text: assigned"></td>
                         </tr>
                     </tbody>
                 </table>
