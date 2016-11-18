@@ -1,10 +1,11 @@
-var RequestViewModel = function(isEditable, requestModel, visitsModel, comments) {
+var RequestViewModel = function(isEditable, requestModel, visitsModel, comments, personId) {
     var self = this;
     self.isEditable = isEditable;
     self.nextVisitDate = moment(requestModel.nextVisitDate).format('MMM-DD-YY HH:MM');
     self.description = ko.observable(requestModel.description);
     self.status = ko.observable(requestModel.status);
     self.rating = ko.observable(requestModel.rating);
+    self.newComment = ko.observable('');
     var disposables = [];
     if (isEditable) {
         self.requestModel = ko.computed(function() {
@@ -44,7 +45,17 @@ var RequestViewModel = function(isEditable, requestModel, visitsModel, comments)
         };
     }));
     self.addNewComment = function(){
-        alert('adding new comment');
+        $.ajax({
+            url: '/api/commented',
+            type: 'POST',
+            data: {
+                requestId: requestModel.id,
+                personId: personId,
+                text: self.newComment()
+            }
+        }).then(function() {
+            location.reload();
+        });
     };
     self.dispose = function() {
         _.forEach(disposables, function(disposable){

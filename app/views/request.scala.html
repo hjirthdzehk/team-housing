@@ -107,7 +107,9 @@
         <div class="panel panel-primary">
             <div class="panel-heading">Comments</div>
             <div class="panel-body">
-                <input class="btn btn-primary" type="button" value="New comment" data-bind="click: addNewComment">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCommentModal">
+                New comment
+                </button>
                 <!-- ko foreach: comments -->
                 <div>
                     <span><b data-bind="text: date"></b></span>
@@ -115,6 +117,35 @@
                     <p data-bind="text: comment"></p>
                 </div>
                 <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addComentLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addComentLabel">Add new comment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="description">Comment</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </div>
+                    <textarea id="newComment"
+                        class="form-control"
+                        rows="3"
+                        data-bind="value: newComment"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: addNewComment">Save changes</button>
             </div>
         </div>
     </div>
