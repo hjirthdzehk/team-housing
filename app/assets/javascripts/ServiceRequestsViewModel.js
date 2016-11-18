@@ -14,6 +14,7 @@ var ServiceRequestsViewModel = function(requestsInfo) {
         _.map(sreqs,
             function(sreq) {
                 return {
+                    id: sreq.id,
                     description: ko.observable(sreq.description),
                     // status: ko.observable(
                     //     function () {
