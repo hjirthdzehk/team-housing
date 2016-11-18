@@ -9,15 +9,19 @@ import org.json4s.ext.JodaTimeSerializers
 import org.json4s.{DefaultFormats, Extraction}
 import play.api.mvc.{Action, Controller}
 
-/**
-  * Created by VladVin on 17.11.2016.
-  */
+case class VisitedViewModel(
+                           totalCost: Double,
+                           visits: List[Visited]
+                           )
+
 class Visiteds @Inject()(json4s: Json4s) extends Controller {
     import json4s._
 
     implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
     def all(requestId: Long) = Action {
-        var visits = Visited.findAll(requestId)
-        Ok(Extraction.decompose(visits))
+        val visits = Visited.findAll(requestId)
+        val totalCostOption = Visited.getTotalCost(requestId)
+        val totalCost = if (totalCostOption.isDefined) totalCostOption.get else 0.0
+        Ok(Extraction.decompose(VisitedViewModel(totalCost, visits)))
     }
 }

@@ -3,9 +3,6 @@ package models
 import org.joda.time.DateTime
 import scalikejdbc._
 
-/**
-  * Created by VladVin on 15.11.2016.
-  */
 case class ServiceRequest (
     id: Long,
     description: String,
@@ -15,7 +12,6 @@ case class ServiceRequest (
 )
 
 object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
-
     def apply(srName: ResultName[ServiceRequest])(rs: WrappedResultSet): ServiceRequest = new ServiceRequest(
         id = rs.get(srName.id),
         description = rs.get(srName.description),
@@ -72,25 +68,14 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
         import Visited.v
         // Walk through only by IN_PROGRESS service requests
         sql"""
-           SELECT ${v.scheduleTime}
+           SELECT ${v.result.scheduleTime}
            FROM ${Visited as v}
-           INNER JOIN ${table}
-           ON ${v.serviceRequsetId} = ${column.id}
-           WHERE ${column.id} = 1 AND ${column.status} = 1
+           INNER JOIN ${ServiceRequest as sr}
+           ON ${v.serviceRequsetId} = ${sr.id}
+           WHERE ${sr.id} = ${requestId} AND ${sr.status} = 1
            ORDER BY ${v.scheduleTime} DESC
            LIMIT 1
            """
-                .map(rs => rs.jodaDateTimeOpt("scheduleTime")).single().apply().get
-    }
-
-    def getTotalCost(requestId: Long)
-                    (implicit session: DBSession = autoSession): Option[Float] = {
-        import Visited.v
-        sql"""
-           SELECT SUM(${v.costs})
-           FROM ${Visited as v}
-           WHERE ${v.serviceRequsetId} = ${requestId}
-           """
-            .map(rs => rs.floatOpt(0)).single().apply().get
+            .map(rs => rs.jodaDateTime(v.resultName.scheduleTime)).single().apply()
     }
 }

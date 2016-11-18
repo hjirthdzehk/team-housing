@@ -1,11 +1,11 @@
-var RequestViewModel = function(requestModel, visits, comments) {
+var RequestViewModel = function(requestModel, visitsModel, comments) {
     var self = this;
     self.description = ko.observable(requestModel.description);
-    self.nextVisitDate = ko.observable(moment('11/20/2016').format('MMM Do YYYY'));
+    self.nextVisitDate = ko.observable(moment(requestModel.nextVisitDate).format('MMM Do YYYY'));
     self.status = ko.observable(requestModel.status);
     self.rating = ko.observable(requestModel.rating);
     self.visits = ko.observable({
-        visits: _.map(visits, function (visit) {
+        visits: _.map(visitsModel.visits, function (visit) {
             return {
                 scheduledTime: moment(visit.scheduleTime).format('MMM-DD-YY HH:MM'),
                 startTime: moment(visit.startTime).format('MMM-DD-YY HH:MM'),
@@ -13,7 +13,7 @@ var RequestViewModel = function(requestModel, visits, comments) {
                 cost: visit.costs
             };
         }),
-        totalCost: _.reduce(visits, function(acc, visit){return acc+visit.costs;}, 0)
+        totalCost: visitsModel.totalCost
     });
     self.comments = ko.observableArray(_.map(comments, function(comment){
         return {

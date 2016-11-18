@@ -9,15 +9,28 @@ import org.json4s.{DefaultFormats, Extraction}
 import org.json4s.ext.JodaTimeSerializers
 import play.api.mvc.{Action, Controller}
 
-/**
-  * Created by VladVin on 17.11.2016.
-  */
+case class ServiceRequestViewModel(
+                                    id: Long,
+                                    description: String,
+                                    rating: Option[Int],
+                                    status: Option[Int],
+                                    nextVisitDate: Option[DateTime]
+                                  )
+
 class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     import json4s._
 
     implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
       def get(requestId: Long) = Action {
-          Ok(Extraction.decompose(ServiceRequest.get(requestId)))
+          val serviceRequest = ServiceRequest.get(requestId)
+          val nextVisitDate = ServiceRequest.findNextVisitDate(requestId)
+          Ok(Extraction.decompose(ServiceRequestViewModel(
+            id=serviceRequest.id,
+            description = serviceRequest.description,
+            rating = serviceRequest.rating,
+            status = serviceRequest.status,
+            nextVisitDate = nextVisitDate
+          )))
       }
 //    def all(flatId: Long) = Action {
 //        var requests = ServiceRequest.findAllForFlat(flatId)
