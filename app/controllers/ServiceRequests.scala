@@ -1,24 +1,32 @@
+/**
+  * Created by VladVin on 17.11.2016.
+  */
 package controllers
 
-import models.ServiceRequest
-import javax.inject.Inject
+import models.{Flat, ServiceRequest}
+import javax.inject.{Inject, Singleton}
 
 import com.github.tototoshi.play2.json4s.native._
 import org.joda.time.DateTime
-import org.json4s.{DefaultFormats, Extraction}
+import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Action, Controller}
 
 case class ServiceRequestViewModel(
-                                    id: Long,
-                                    description: String,
-                                    rating: Option[Int],
-                                    status: Option[Int],
-                                    nextVisitDate: Option[DateTime]
-                                  )
+    id: Long,
+    description: String,
+    rating: Option[Int],
+    status: Option[Int],
+    nextVisitDate: Option[DateTime],
+    totalCost: Float = 0.0f
+)
 
+case class RequestsInfo(sreqs: Seq[ServiceRequestViewModel],
+                        flatNumber: Int)
+
+@Singleton
 class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     import json4s._
 
@@ -60,10 +68,22 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
         )
       }
 
-//    def all(flatId: Long) = Action {
-//        var requests = ServiceRequest.findAllForFlat(flatId)
-//        var nextVisits = Seq[DateTime]
-//        requests.foreach(sr => nextVisits + ServiceRequest.findNextVisitDate(sr.id))
-//        Ok
-//    }
+    def all(flatId: Int) = Action {
+        val flatNumber = Flat.findById(flatId.toInt)
+            .map(f => f.flatNumber).getOrElse(-1)
+
+        val requests = ServiceRequest.findAllForFlat(flatId)
+        var serviceReqs = Seq[ServiceRequestViewModel]()
+        requests.foreach(sr => serviceReqs = serviceReqs :+ ServiceRequestViewModel(
+                id = sr.id,
+                description = sr.description,
+                rating = sr.rating,
+                status = sr.status,
+                nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
+                totalCost = ServiceRequest.getTotalCost(sr.id)))
+
+        Ok(Extraction.decompose(
+            RequestsInfo(serviceReqs, flatNumber)
+        ))
+    }
 }

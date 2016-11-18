@@ -52,8 +52,8 @@ object Visited extends SQLSyntaxSupport[Visited] {
     def findAll(requestId: Long)
                (implicit session: DBSession = autoSession): List[Visited] = {
         sql"""
-             SELECT ${v.result.*} FROM ${Visited as v}
-             WHERE ${v.serviceRequsetId} = ${requestId}
+           SELECT ${v.result.*} FROM ${Visited as v}
+           WHERE ${v.serviceRequsetId} = ${requestId}
            """
             .map(Visited(v)).list().apply()
     }

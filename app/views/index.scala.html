@@ -23,6 +23,7 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ListDwellersViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/SignUpViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ServiceRequestsViewModel.js")"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -38,6 +39,7 @@
                 <li role="presentation"><a href="#/history">Measures History</a></li>
                 <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
                 <li role="presentation"><a href="#/signUp">Sign Up</a></li>
+                <li role="presentation"><a href="#/serviceRequests">Service Requests</a></li>
             </ul>
         </div>
     </nav>
@@ -49,6 +51,7 @@
     @measurementsHistory()
     @listDwellers()
     @signUpTemplate()
+    @serviceRequests()
 
     <script type="text/javascript">
         new MainViewModel().run('#/measuresInput');

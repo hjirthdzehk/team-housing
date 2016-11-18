@@ -38,8 +38,8 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
 
         RequestToFlat.create(id, flatId)
 
-        sql"""SELECT * FROM ${table}
-             WHERE ${column.id} = ${id}
+        sql"""SELECT ${sr.result.*} FROM ${ServiceRequest as sr}
+             WHERE ${sr.id} = ${id}
            """
             .map(ServiceRequest(sr)).single().apply().get
     }
@@ -61,10 +61,10 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
                       (implicit session: DBSession = autoSession): List[ServiceRequest] = {
         import RequestToFlat.rtf
         sql"""
-           SELECT *
-           FROM ${table}
+           SELECT ${sr.result.*}
+           FROM ${ServiceRequest as sr}
            INNER JOIN ${RequestToFlat as rtf}
-           ON ${column.id} = ${rtf.requestId}
+           ON ${sr.id} = ${rtf.requestId}
            WHERE ${rtf.flatId} = ${flatId}
            """
             .map(ServiceRequest(sr)).list().apply()
@@ -80,10 +80,21 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
            FROM ${Visited as v}
            INNER JOIN ${ServiceRequest as sr}
            ON ${v.serviceRequsetId} = ${sr.id}
-           WHERE ${sr.id} = ${requestId} AND ${sr.status} = 1
+           WHERE ${sr.id} = 1 AND ${sr.status} = 1
            ORDER BY ${v.scheduleTime} DESC
            LIMIT 1
            """
-            .map(rs => rs.jodaDateTime(v.resultName.scheduleTime)).single().apply()
+                .map(rs => rs.jodaDateTimeOpt(v.resultName.scheduleTime)).single().apply().get
+    }
+
+    def getTotalCost(requestId: Long)
+                    (implicit session: DBSession = autoSession): Float = {
+        import Visited.v
+        sql"""
+           SELECT SUM(${v.costs})
+           FROM ${Visited as v}
+           WHERE ${v.serviceRequsetId} = ${requestId}
+           """
+            .map(rs => rs.float(1)).single().apply().get
     }
 }

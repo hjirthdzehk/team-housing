@@ -71,16 +71,26 @@ var MainViewModel = function() {
             var requestId = this.params['requestId'];
             var isEditable = true; //check if logined user is admin
             var personId = 1;
-            $.when($.get('/api/request/'+requestId),
-                $.get('/api/visited/'+requestId),
-                $.get('/api/commented/'+requestId))
-             .then(function(requestModel, visits, comments) {
-                var viewModel = new RequestViewModel(isEditable, requestModel[0], visits[0], comments[0], personId);
+            $.when($.get('/api/request/' + requestId),
+                $.get('/api/visited/' + requestId),
+                $.get('/api/commented/' + requestId))
+                .then(function (requestModel, visits, comments) {
+                    var viewModel = new RequestViewModel(isEditable, requestModel[0], visits[0], comments[0], personId);
+                    swapTemplate({
+                        name: 'request-template',
+                        model: viewModel
+                    });
+                })
+        });
+
+        this.get('#/serviceRequests', function() {
+            $.get('/serviceRequests/byFlatId/1').then(function (requestsInfo) {
+                var viewModel = new ServiceRequestsViewModel(requestsInfo);
                 swapTemplate({
-                    name:'request-template',
+                    name: 'service-requests-template',
                     model: viewModel
-                });
-            });
+                })
+            })
         });
     });
 

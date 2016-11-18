@@ -1,0 +1,31 @@
+<script type="text/html" id="service-requests-template">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Flat #<span data-bind="text: flatNumber"></span></h3>
+        </div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Next visit date</th>
+                        <th>Total cost</th>
+                        <th>Creation date</th>
+                        <th>Rating</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: serviceRequests">
+                    <tr>
+                        <td data-bind="text: description"></td>
+                        <td data-bind="text: status"></td>
+                        <td data-bind="text: nextVisitDate"></td>
+                        <td data-bind="text: totalCost"></td>
+                        <td data-bind="text: creationDate"></td>
+                        <td data-bind="text: rating"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>

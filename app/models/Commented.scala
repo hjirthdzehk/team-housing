@@ -15,12 +15,12 @@ case class Commented (
 )
 
 case class CommentedWithPerson(
-                              id: Long,
-                              personName: String,
-                              personSurname: String,
-                              comment: String,
-                              date: DateTime
-                              )
+    id: Long,
+    personName: String,
+    personSurname: String,
+    comment: String,
+    date: DateTime
+)
 
 object Commented extends SQLSyntaxSupport[Commented] {
     def apply(cName: ResultName[Commented])
