@@ -1,5 +1,4 @@
 var MetersStatisticsViewModel = function() {
-
     self.meters = ko.observableArray([]);
     $.get('/meters/1').then(function(meters) {
         self.meters(meters.meterListItems);

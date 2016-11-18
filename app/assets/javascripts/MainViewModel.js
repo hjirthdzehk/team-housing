@@ -66,10 +66,26 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
+
+        this.get('admin#/request/:requestId', function() {
+            var requestId = this.params['requestId'];
+            var isEditable = true; //check if logined user is admin
+            var personId = 1;
+            $.when($.get('/api/request/'+requestId),
+                $.get('/api/visited/'+requestId),
+                $.get('/api/commented/'+requestId))
+             .then(function(requestModel, visits, comments) {
+                var viewModel = new RequestViewModel(isEditable, requestModel[0], visits[0], comments[0], personId);
+                swapTemplate({
+                    name:'request-template',
+                    model: viewModel
+                });
+            });
+        });
     });
 
-    this.run = function() {
-        app.run('#/measuresInput');
+    this.run = function(startUrl) {
+        app.run(startUrl);
     };
     $(".nav a").on("click", function(){
         $(".nav").find(".active").removeClass("active");

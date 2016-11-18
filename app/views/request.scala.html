@@ -1,0 +1,153 @@
+<script type="text/html" id="request-template">
+<div class="container">
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Request info</div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <fieldset data-bind="attr: {'disabled': !isEditable}">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="description">Description</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-list-alt"></span>
+                            </div>
+                            <textarea id="description"
+                                class="form-control"
+                                rows="3"
+                                data-bind="value: description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="next-visit-date">Next visit</label>
+                        <div class="col-md-10 input-group date">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </div>
+                            <p class="form-control-static" id="next-visit-date" data-bind="text: nextVisitDate"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="request-status">Status</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-stats"></span>
+                            </div>
+                            <select class="form-control" id="request-status" data-bind="value: status">
+                                <option value="0">Open</option>
+                                <option value="1">In progress</option>
+                                <option value="2">Done</option>
+                                <option value="3">Closed</option>
+                                <option value="4">Idle</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="request-rating">Rating</label>
+                        <div class="col-md-10 input-group">
+                            <input id="rate1" class="icon-checkbox" type="radio" value="1" name="rating" data-bind="checked: rating, checkedValue: 1"/>
+                            <label for="rate1">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate2" class="icon-checkbox" type="radio" value="2" name="rating"
+                            data-bind="checked: rating, checkedValue: 2"/>
+                            <label for="rate2">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate3" class="icon-checkbox" type="radio" value="3" name="rating"
+                            data-bind="checked: rating, checkedValue: 3"/>
+                            <label for="rate3">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate4" class="icon-checkbox" type="radio" value="4" name="rating"
+                            data-bind="checked: rating, checkedValue: 4"/>
+                            <label for="rate4">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate5" class="icon-checkbox" type="radio" value="5" name="rating"
+                            data-bind="checked: rating, checkedValue: 5"/>
+                            <label for="rate5">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                        </div>
+                    </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Visits</div>
+            <div class="panel-body" data-bind="with: visits">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Scheduled time</th>
+                            <th>Start time</th>
+                            <th>End time</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: visits">
+                        <tr>
+                            <td data-bind="text: scheduledTime"></td>
+                            <td data-bind="text: startTime"></td>
+                            <td data-bind="text: endTime"></td>
+                            <td data-bind="text: cost"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h4>Total cost: <!-- ko text: totalCost --><!-- /ko -->R</h4>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">Comments</div>
+            <div class="panel-body">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCommentModal">
+                New comment
+                </button>
+                <!-- ko foreach: comments -->
+                <div>
+                    <span><b data-bind="text: date"></b></span>
+                    <span><b data-bind="text: person"></b></span>:
+                    <p data-bind="text: comment"></p>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addCommentModal" tabindex="-1" role="dialog" aria-labelledby="addComentLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addComentLabel">Add new comment</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="description">Comment</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </div>
+                    <textarea id="newComment"
+                        class="form-control"
+                        rows="3"
+                        data-bind="value: newComment"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: addNewComment">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+</script>

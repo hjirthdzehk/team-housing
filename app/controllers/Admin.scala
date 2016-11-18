@@ -2,9 +2,8 @@ package controllers
 
 import play.api.mvc._
 
-class Root extends Controller {
-
+class Admin extends Controller {
   def index = Action {
-    Ok(views.html.index())
+    Ok(views.html.admin())
   }
 }

@@ -4,9 +4,6 @@ import org.joda.time.DateTime
 import scalikejdbc._
 import sun.font.LayoutPathImpl.EndType
 
-/**
-  * Created by VladVin on 15.11.2016.
-  */
 case class Visited (
     visitId: Long,
     serviceRequsetId: Long,
@@ -55,9 +52,21 @@ object Visited extends SQLSyntaxSupport[Visited] {
     def findAll(requestId: Long)
                (implicit session: DBSession = autoSession): List[Visited] = {
         sql"""
-             SELECT * FROM ${table}
-             WHERE ${column.serviceRequsetId} = ${requestId}
+             SELECT ${v.result.*} FROM ${Visited as v}
+             WHERE ${v.serviceRequsetId} = ${requestId}
            """
             .map(Visited(v)).list().apply()
+    }
+
+    def applyToDouble(rs: WrappedResultSet): Double = rs.get("totalCosts")
+    def getTotalCost(requestId: Long)
+                    (implicit session: DBSession = autoSession): Option[Double] = {
+      sql"""
+           SELECT SUM(costs) AS totalCosts
+           FROM ${Visited as v}
+           GROUP BY ${v.serviceRequsetId}
+           HAVING ${v.serviceRequsetId}=${requestId}
+           """
+        .map(applyToDouble).single().apply()
     }
 }
