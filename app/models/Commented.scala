@@ -14,6 +14,14 @@ case class Commented (
     date: DateTime
 )
 
+case class CommentedWithPerson(
+                              id: Long,
+                              personName: String,
+                              personSurname: String,
+                              comment: String,
+                              date: DateTime
+                              )
+
 object Commented extends SQLSyntaxSupport[Commented] {
     def apply(cName: ResultName[Commented])
              (rs: WrappedResultSet): Commented = new Commented (
@@ -47,12 +55,24 @@ object Commented extends SQLSyntaxSupport[Commented] {
         Commented(id = id, requestId = requestId, personId = personId, text = text, date = date)
     }
 
+    val p = Person.p
+    def apply(cName: ResultName[Commented], pName: ResultName[Person])
+             (rs: WrappedResultSet): CommentedWithPerson = new CommentedWithPerson (
+      id = rs.get(cName.id),
+      comment = rs.get(cName.text),
+      date = rs.get(cName.date),
+      personName = rs.get(pName.name),
+      personSurname = rs.get(pName.surname)
+    )
+
     def findAll(requestId: Long)
-               (implicit session: DBSession = autoSession): List[Commented] = {
+               (implicit session: DBSession = autoSession): List[CommentedWithPerson] = {
         sql"""
-             SELECT * FROM ${table}
-             WHERE ${column.requestId} = ${requestId}
+             SELECT ${c.result.*}, ${p.result.*}
+             FROM ${Commented as c} NATURAL JOIN ${Person as p}
+             WHERE ${c.requestId} = ${requestId}
+             ORDER BY ${c.date}
            """
-            .map(Commented(c)).list().apply()
+              .map((set: WrappedResultSet) => apply(c.resultName,p.resultName)(set)).list().apply()
     }
 }

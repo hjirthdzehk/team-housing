@@ -1,4 +1,4 @@
-var RequestViewModel = function(requestModel, visits) {
+var RequestViewModel = function(requestModel, visits, comments) {
     var self = this;
     self.description = ko.observable(requestModel.description);
     self.nextVisitDate = ko.observable(moment('11/20/2016').format('MMM Do YYYY'));
@@ -15,11 +15,13 @@ var RequestViewModel = function(requestModel, visits) {
         }),
         totalCost: _.reduce(visits, function(acc, visit){return acc+visit.costs;}, 0)
     });
-    self.comments = ko.observableArray([{
-        date: moment('11/25/2016').format('MMM Do YYYY'),
-        person: 'Oleg Kulaev',
-        comment: 'Vse govno peredelyvai!'
-    }]);
+    self.comments = ko.observableArray(_.map(comments, function(comment){
+        return {
+            date: moment(comment.date).format('MMM-DD-YY HH:MM'),
+            comment: comment.comment,
+            person: comment.personName+' '+comment.personSurname
+        };
+    }));
     self.addNewComment = function(){
         alert('adding new comment');
     };
