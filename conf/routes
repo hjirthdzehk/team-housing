@@ -23,6 +23,7 @@ GET     /dwellers/listAll                   controllers.Dwellers.listAll()
 POST    /dwellers/signUp                    controllers.Dwellers.signUp()
 
 GET     /api/request/:id                    controllers.ServiceRequests.get(id: Long)
+PUT     /api/request/:id                    controllers.ServiceRequests.update(id: Long)
 GET     /api/visited/:requestId             controllers.Visiteds.all(requestId: Long)
 GET     /api/commented/:requestId           controllers.Comments.all(requestId: Long)
 

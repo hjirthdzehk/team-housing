@@ -44,6 +44,14 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
             .map(ServiceRequest(sr)).single().apply().get
     }
 
+    def update(requestId: Long, description: String, rating: Int, status: Int)(implicit session: DBSession = autoSession): Unit = {
+        sql"""
+              UPDATE ${ServiceRequest as sr}
+              SET description=${description}, rating=${rating}, status=${status}
+              WHERE ${sr.id} = ${requestId}
+              """.update().apply()
+    }
+
     def get(requestId: Long)(implicit session: DBSession = autoSession) : ServiceRequest = {
       sql"""select ${sr.result.*} from ${ServiceRequest as sr} where ${sr.id} = ${requestId}"""
         .map(ServiceRequest(sr)).single().apply().get

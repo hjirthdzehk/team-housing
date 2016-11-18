@@ -7,6 +7,8 @@ import com.github.tototoshi.play2.json4s.native._
 import org.joda.time.DateTime
 import org.json4s.{DefaultFormats, Extraction}
 import org.json4s.ext.JodaTimeSerializers
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc.{Action, Controller}
 
 case class ServiceRequestViewModel(
@@ -32,6 +34,32 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
             nextVisitDate = nextVisitDate
           )))
       }
+
+      case class ServiceRequestForm(description: String,
+                                    status: Int,
+                                    rating: Int)
+
+      private val serviceRequestForm = Form(
+        mapping(
+          "description" -> text,
+          "status" -> number,
+          "rating" -> number
+        )(ServiceRequestForm.apply)(ServiceRequestForm.unapply)
+      )
+
+      def update(requestId: Long) = Action { implicit req =>
+        serviceRequestForm.bindFromRequest.fold(
+          formWithErrors => BadRequest(
+            formWithErrors.errors
+              .foldLeft("")((res, message) =>
+                res + message.message + ",")),
+          form => {
+            ServiceRequest.update(requestId, form.description, form.rating, form.status)
+            Ok
+          }
+        )
+      }
+
 //    def all(flatId: Long) = Action {
 //        var requests = ServiceRequest.findAllForFlat(flatId)
 //        var nextVisits = Seq[DateTime]
