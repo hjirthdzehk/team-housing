@@ -69,11 +69,12 @@ var MainViewModel = function() {
 
         this.get('admin#/request/:requestId', function() {
             var requestId = this.params['requestId'];
+            var isEditable = true; //check if logined user is admin
             $.when($.get('/api/request/'+requestId),
                 $.get('/api/visited/'+requestId),
                 $.get('/api/commented/'+requestId))
              .then(function(requestModel, visits, comments) {
-                var viewModel = new RequestViewModel(requestModel[0], visits[0], comments[0]);
+                var viewModel = new RequestViewModel(isEditable, requestModel[0], visits[0], comments[0]);
                 swapTemplate({
                     name:'request-template',
                     model: viewModel

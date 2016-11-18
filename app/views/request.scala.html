@@ -5,13 +5,17 @@
             <div class="panel-heading">Request info</div>
             <div class="panel-body">
                 <form class="form-horizontal">
+                    <fieldset data-bind="attr: {'disabled': !isEditable}">
                     <div class="form-group">
                         <label class="col-md-2 control-label" for="description">Description</label>
                         <div class="col-md-10 input-group">
                             <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-list-alt"></span>
                             </div>
-                            <textarea id="description" class="form-control" rows="3" data-bind="value: description"></textarea>
+                            <textarea id="description"
+                                class="form-control"
+                                rows="3"
+                                data-bind="value: description"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -38,40 +42,41 @@
                             </select>
                         </div>
                     </div>
-                <div class="form-group">
-                    <label class="col-md-2 control-label" for="request-rating">Rating</label>
-                    <div class="col-md-10 input-group">
-                        <input id="rate1" class="icon-checkbox" type="radio" value="1" name="rating" data-bind="checked: rating, checkedValue: 1"/>
-                        <label for="rate1">
-                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
-                            <span class='glyphicon glyphicon-star checked text-danger'></span>
-                        </label>
-                        <input id="rate2" class="icon-checkbox" type="radio" value="2" name="rating"
-                        data-bind="checked: rating, checkedValue: 2"/>
-                        <label for="rate2">
-                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
-                            <span class='glyphicon glyphicon-star checked text-danger'></span>
-                        </label>
-                        <input id="rate3" class="icon-checkbox" type="radio" value="3" name="rating"
-                        data-bind="checked: rating, checkedValue: 3"/>
-                        <label for="rate3">
-                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
-                            <span class='glyphicon glyphicon-star checked text-danger'></span>
-                        </label>
-                        <input id="rate4" class="icon-checkbox" type="radio" value="4" name="rating"
-                        data-bind="checked: rating, checkedValue: 4"/>
-                        <label for="rate4">
-                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
-                            <span class='glyphicon glyphicon-star checked text-danger'></span>
-                        </label>
-                        <input id="rate5" class="icon-checkbox" type="radio" value="5" name="rating"
-                        data-bind="checked: rating, checkedValue: 5"/>
-                        <label for="rate5">
-                            <span class='glyphicon glyphicon-star unchecked text-muted'></span>
-                            <span class='glyphicon glyphicon-star checked text-danger'></span>
-                        </label>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="request-rating">Rating</label>
+                        <div class="col-md-10 input-group">
+                            <input id="rate1" class="icon-checkbox" type="radio" value="1" name="rating" data-bind="checked: rating, checkedValue: 1"/>
+                            <label for="rate1">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate2" class="icon-checkbox" type="radio" value="2" name="rating"
+                            data-bind="checked: rating, checkedValue: 2"/>
+                            <label for="rate2">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate3" class="icon-checkbox" type="radio" value="3" name="rating"
+                            data-bind="checked: rating, checkedValue: 3"/>
+                            <label for="rate3">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate4" class="icon-checkbox" type="radio" value="4" name="rating"
+                            data-bind="checked: rating, checkedValue: 4"/>
+                            <label for="rate4">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                            <input id="rate5" class="icon-checkbox" type="radio" value="5" name="rating"
+                            data-bind="checked: rating, checkedValue: 5"/>
+                            <label for="rate5">
+                                <span class='glyphicon glyphicon-star unchecked text-muted'></span>
+                                <span class='glyphicon glyphicon-star checked text-danger'></span>
+                            </label>
+                        </div>
                     </div>
-                </div>
+                    </fieldset>
                 </form>
             </div>
         </div>

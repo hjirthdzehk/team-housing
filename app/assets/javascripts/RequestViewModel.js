@@ -1,25 +1,30 @@
-var RequestViewModel = function(requestModel, visitsModel, comments) {
+var RequestViewModel = function(isEditable, requestModel, visitsModel, comments) {
     var self = this;
-    self.description = ko.observable(requestModel.description);
+    self.isEditable = isEditable;
     self.nextVisitDate = moment(requestModel.nextVisitDate).format('MMM-DD-YY HH:MM');
+    self.description = ko.observable(requestModel.description);
     self.status = ko.observable(requestModel.status);
     self.rating = ko.observable(requestModel.rating);
-    self.requestModel = ko.computed(function() {
-        return {
-            id: requestModel.id,
-            description: self.description(),
-            status: self.status(),
-            rating: self.rating()
-        }
-    });
-    var debounceTimeout = 1000;
-    var requestModelSubscription = self.requestModel.subscribe(_.debounce(function(updatedModel) {
-        $.ajax({
-            url: '/api/request/1',
-            type: 'PUT',
-            data: updatedModel
+    var disposables = [];
+    if (isEditable) {
+        self.requestModel = ko.computed(function() {
+            return {
+                id: requestModel.id,
+                description: self.description(),
+                status: self.status(),
+                rating: self.rating()
+            }
         });
-    }, debounceTimeout));
+        var debounceTimeout = 500;
+        var requestModelSubscription = self.requestModel.subscribe(_.debounce(function(updatedModel) {
+            $.ajax({
+                url: '/api/request/1',
+                type: 'PUT',
+                data: updatedModel
+            });
+        }, debounceTimeout));
+        disposables = disposables.concat([self.requestModel, requestModelSubscription]);
+    }
     self.visits = ko.observable({
         visits: _.map(visitsModel.visits, function (visit) {
             return {
@@ -41,10 +46,11 @@ var RequestViewModel = function(requestModel, visitsModel, comments) {
     self.addNewComment = function(){
         alert('adding new comment');
     };
-    var disposables = [self.requestModel, requestModelSubscription];
     self.dispose = function() {
         _.forEach(disposables, function(disposable){
-            disposable.dispose();
+            if (disposable && _.isFunction(disposable.dispose)){
+                disposable.dispose();
+            }
         });
     }
 };
