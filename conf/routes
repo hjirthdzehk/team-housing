@@ -3,8 +3,6 @@
 
 GET     /                                   controllers.Root.index
 
-GET     /admin                              controllers.Admin.index
-
 GET     /companies                          controllers.Companies.all
 GET     /companies/:id                      controllers.Companies.show(id: Long)
 POST    /companies                          controllers.Companies.create
