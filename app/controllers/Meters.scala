@@ -135,7 +135,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
     )(MeterCreateForm.apply)(MeterCreateForm.unapply)
   )
 
-  def createMeter() =
+  def create() =
     Action {
       implicit req =>
         meterCreateForm.bindFromRequest.fold(

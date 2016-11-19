@@ -9,7 +9,7 @@ var MetersCreateViewModel = function() {
 
     self.createMeter = function() {
     console.log("hello")
-        $.post('/meters/create/', {
+        $.post('/api/meters', {
             'title'         : self.title(),
             'type'          : self.type(),
             'meterUnitId'   : self.meterUnitId(),
