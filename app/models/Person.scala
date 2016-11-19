@@ -72,12 +72,12 @@ object Person extends SQLSyntaxSupport[Person] {
     paternalName: String)(implicit session: DBSession = autoSession): Person = {
     val registrationDate = LocalDate.now()
     val generatedKey = sql"""
-      insert into ${Person.table} (
+      INSERT INTO ${Person.table} (
         ${column.name},
         ${column.surname},
         ${column.paternalName},
         ${column.registrationDate}
-      ) values (
+      ) VALUES (
         ${name},
         ${surname},
         ${paternalName},
@@ -115,22 +115,22 @@ object Person extends SQLSyntaxSupport[Person] {
 
   def save(entity: Person)(implicit session: DBSession = autoSession): Person = {
     sql"""
-      update
+      UPDATE
         ${Person.table}
-      set
+      SET
         ${column.personId} = ${entity.personId},
         ${column.name} = ${entity.name},
         ${column.surname} = ${entity.surname},
         ${column.paternalName} = ${entity.paternalName},
         ${column.registrationDate} = ${entity.registrationDate}
-      where
+      WHERE
         ${column.personId} = ${entity.personId}
       """.update.apply()
     entity
   }
 
   def destroy(entity: Person)(implicit session: DBSession = autoSession): Unit = {
-    sql"""delete from ${Person.table} where ${column.personId} = ${entity.personId}""".update.apply()
+    sql"""DELETE FROM ${Person.table} WHERE ${column.personId} = ${entity.personId}""".update.apply()
   }
 
 }

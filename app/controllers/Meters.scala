@@ -1,17 +1,26 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
-
-import com.github.tototoshi.play2.json4s.native._
-import models.{MeterReading, _}
-import org.joda.time.DateTime
-import org.json4s.ext.JodaTimeSerializers
+//import javax.inject.{Inject, Singleton}
+//
+//import com.github.tototoshi.play2.json4s.native.Json4s
+//import models.{MeterReading, _}
+//import org.joda.time.DateTime
+//import org.json4s.ext.JodaTimeSerializers
+//import org.json4s.{DefaultFormats, Extraction}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 import play.api.libs.json.Json
 import scalikejdbc._
 import models.Meter.autoSession
+
+import javax.inject.{Inject, Singleton}
+
+import com.github.tototoshi.play2.json4s.native._
+import models._
+import org.joda.time.DateTime
+import org.json4s._
+import org.json4s.ext.JodaTimeSerializers
 
 case class MeterReadingCost(title: String,
                             date: DateTime,
@@ -111,4 +120,53 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
       }
     )
   }
+
+  case class MeterCreateForm(title: String,
+                             `type`: String,
+                             meterUnitId: Int,
+                             flatId: Int)
+
+  val meterCreateForm = Form(
+    mapping(
+      "title" -> text,
+      "type" -> text,
+      "meterUnitId" -> number,
+      "flatId" -> number
+    )(MeterCreateForm.apply)(MeterCreateForm.unapply)
+  )
+
+  def createMeter() =
+    Action {
+      implicit req =>
+        meterCreateForm.bindFromRequest.fold(
+          formWithErrors => BadRequest("Something bad happened"),
+          form => {
+            val meter = Meter.create(
+              form.title,
+              form.`type`,
+              form.meterUnitId,
+              form.flatId
+            )
+
+//            Ok(Json.obj("meter" -> meter))
+            Ok//(Extraction.decompose(meter))
+          }
+        )
+    }
+
+//  def signUp() =
+//    Action { implicit req =>
+//      signUpForm.bindFromRequest.fold(
+//        formWithErrors => BadRequest("Error"), // TODO better error handling
+//        form => {
+//          val person = Person.create(
+//            form.name,
+//            form.surname,
+//            form.paternalName)
+//          Dweller.create(person.personId)
+//
+//          Ok(Extraction.decompose(person))
+//        }
+//      )
+//    }
 }

@@ -2,17 +2,23 @@
 var MetersCreateViewModel = function() {
     var self = this;
 
-    self.name = ko.observable('');
-    self.surname = ko.observable('');
-    self.paternalName = ko.observable('');
+    self.title = ko.observable('');
+    self.type = ko.observable('');
+    self.meterUnitId = ko.observable('');
+    self.flatId = ko.observable('');
 
-    self.register = function() {
-//        $.post('/dwellers/signUp', {
-//            'name' : self.name(),
-//            'surname' : self.surname(),
-//            'paternalName' : self.paternalName()
-//        }).then(function() {
-            self.name('');
-//        });
+    self.createMeter = function() {
+    console.log("hello")
+        $.post('/meters/create/', {
+            'title'         : self.title(),
+            'type'          : self.type(),
+            'meterUnitId'   : self.meterUnitId(),
+            'flatId'        : self.flatId()
+        }).then(function () {
+            self.title('');
+            self.type('');
+            self.meterUnitId('');
+            self.flatId('');
+        });
     }
 };

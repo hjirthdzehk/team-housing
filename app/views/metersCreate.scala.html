@@ -4,37 +4,48 @@
         <div id="legend">
             <legend class=""><h1>Create your own meters!</h1></legend>
         </div>
-        <div class="control-group">
+        <div class="control-group" left="100">
                 <!-- Meter Title -->
-            <label class="control-label"  for="name">Name</label>
+            <label class="control-label"  for="name">Title</label>
             <div class="controls">
-                <input type="text" id="name" name="name" placeholder="" class="input-xlarge" data-bind="value: name">
+                <input type="text" id="title" value="" name="title" placeholder="" class="input-xlarge" data-bind="value: title">
                 <p class="help-block">Name can contain any letters or numbers</p>
             </div>
         </div>
 
         <div class="control-group">
-                <!-- Surname -->
-            <label class="control-label" for="surname">Surname</label>
+                <!-- Type -->
+            <label class="control-label" for="surname">Type of the Meter</label>
             <div class="controls">
-                <input type="text" id="surname" name="surname" placeholder="" class="input-xlarge"  data-bind="value: surname">
-                <p class="help-block">Surname can contain any letters or numbers</p>
+                <input type="text" id="type" name="type" placeholder="" class="input-xlarge"  data-bind="value: type">
+                <p class="help-block">Can be Water or Electricity</p>
             </div>
         </div>
 
         <div class="control-group">
-                <!-- Paternal name -->
-            <label class="control-label" for="paternalName">Paternal name</label>
+                <!-- MeterUnitId -->
+            <label class="control-label" for="paternalName">Meter Unit Id</label>
             <div class="controls">
-                <input type="text" id="paternalName" name="paternalName" placeholder="" class="input-xlarge"  data-bind="value: paternalName">
-                <p class="help-block">Paternal name can contain any letters or numbers</p>
+                <input type="number" id="meterUnitId" name="meterUnitId" placeholder="" class="input-xlarge"
+                data-bind="value: meterUnitId">
+                <p class="help-block">MeterUnitId should be a number</p>
+            </div>
+        </div>
+
+         <div class="control-group">
+                <!-- FlatId -->
+            <label class="control-label" for="paternalName">Flat Id</label>
+            <div class="controls">
+                <input type="number" id="flatId" name="flatId" placeholder="" class="input-xlarge"
+                data-bind="value: flatId">
+                <p class="help-block">FlatId should be a number</p>
             </div>
         </div>
 
         <div class="control-group">
                 <!-- Button -->
             <div class="controls">
-                <button class="btn btn-success" data-bind="click: register">Register</button>
+                <button class="btn btn-success" data-bind="click: createMeter">Create</button>
             </div>
         </div>
     </fieldset>
