@@ -26,6 +26,7 @@
     <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment-with-locales.min.js'></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ko-binding-handlers.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersCreateViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MainViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
@@ -49,6 +50,7 @@
                 <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
                 <li role="presentation"><a href="#/signUp">Sign Up</a></li>
                 <li role="presentation"><a href="#/serviceRequests">Service Requests</a></li>
+                <li role="presentation"><a href="#/meters/create">Create meters!</a></li>
             </ul>
         </div>
     </nav>
@@ -56,6 +58,7 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
+    @metersCreate()
     @metersStatistic()
     @measurementsHistory()
     @listDwellers()
