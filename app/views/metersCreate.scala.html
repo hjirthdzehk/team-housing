@@ -1,0 +1,39 @@
+<script type="text/html" id="meters-create-template">
+<form class="form-horizontal" action='' method="POST">
+    <fieldset>
+        <div id="legend">
+            <legend class=""><h1>Create your own meters!</h1></legend>
+        </div>
+        <div class="control-group" left="100">
+                <!-- Meter Title -->
+            <label class="control-label"  for="name">Title</label>
+            <div class="controls">
+                <input type="text" id="title" value="" name="title" placeholder="" class="input-xlarge" data-bind="value: title">
+                <p class="help-block">Name can contain any letters or numbers</p>
+            </div>
+        </div>
+
+        <select data-bind="options: availableMeterTypes,
+                   optionsText: 'name',
+                   value: selectedMeterType,
+                   optionsCaption: 'Choose Meter Type'" />
+
+         <div class="control-group">
+                <!-- FlatId -->
+            <label class="control-label" for="paternalName">Flat Id</label>
+            <div class="controls">
+                <input type="number" id="flatId" name="flatId" placeholder="" class="input-xlarge"
+                data-bind="value: flatId">
+                <p class="help-block">FlatId should be a number</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+                <!-- Button -->
+            <div class="controls">
+                <button class="btn btn-success" data-bind="click: createMeter">Create</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</script>

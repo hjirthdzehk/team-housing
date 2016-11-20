@@ -31,6 +31,14 @@ var MainViewModel = function() {
             });
         });
 
+        this.get('#/meters/create', function() {
+            var viewModel = new MetersCreateViewModel();
+            swapTemplate({
+                name:'meters-create-template',
+                model: viewModel
+            });
+        });
+
         this.get('#/meters/statistics', function() {
             var viewModel = new MetersStatisticsViewModel();
             swapTemplate({
@@ -60,7 +68,7 @@ var MainViewModel = function() {
         });
 
         this.get('#/signUp', function () {
-            var viewModel = new SignUpModel();
+            var viewModel = new SignUpViewModel();
             swapTemplate({
                 name: 'sign-up-template',
                 model: viewModel

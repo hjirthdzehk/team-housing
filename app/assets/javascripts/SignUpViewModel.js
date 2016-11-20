@@ -1,6 +1,6 @@
 /** Created by a.kiselev on 16/11/2016. */
 
-var SignUpModel = function() {
+var SignUpViewModel = function() {
     var self = this;
 
     self.name = ko.observable('');
