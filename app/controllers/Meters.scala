@@ -148,25 +148,8 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
               form.flatId
             )
 
-//            Ok(Json.obj("meter" -> meter))
             Ok//(Extraction.decompose(meter))
           }
         )
     }
-
-//  def signUp() =
-//    Action { implicit req =>
-//      signUpForm.bindFromRequest.fold(
-//        formWithErrors => BadRequest("Error"), // TODO better error handling
-//        form => {
-//          val person = Person.create(
-//            form.name,
-//            form.surname,
-//            form.paternalName)
-//          Dweller.create(person.personId)
-//
-//          Ok(Extraction.decompose(person))
-//        }
-//      )
-//    }
 }

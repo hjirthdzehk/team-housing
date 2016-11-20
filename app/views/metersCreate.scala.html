@@ -13,24 +13,10 @@
             </div>
         </div>
 
-        <div class="control-group">
-                <!-- Type -->
-            <label class="control-label" for="surname">Type of the Meter</label>
-            <div class="controls">
-                <input type="text" id="type" name="type" placeholder="" class="input-xlarge"  data-bind="value: type">
-                <p class="help-block">Can be Water or Electricity</p>
-            </div>
-        </div>
-
-        <div class="control-group">
-                <!-- MeterUnitId -->
-            <label class="control-label" for="paternalName">Meter Unit Id</label>
-            <div class="controls">
-                <input type="number" id="meterUnitId" name="meterUnitId" placeholder="" class="input-xlarge"
-                data-bind="value: meterUnitId">
-                <p class="help-block">MeterUnitId should be a number</p>
-            </div>
-        </div>
+        <select data-bind="options: availableMeterTypes,
+                   optionsText: 'name',
+                   value: selectedMeterType,
+                   optionsCaption: 'Choose Meter Type'" />
 
          <div class="control-group">
                 <!-- FlatId -->

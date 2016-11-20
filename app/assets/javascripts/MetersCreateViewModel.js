@@ -2,23 +2,35 @@
 var MetersCreateViewModel = function() {
     var self = this;
 
-    self.title = ko.observable('');
-    self.type = ko.observable('');
-    self.meterUnitId = ko.observable('');
-    self.flatId = ko.observable('');
+    this.title = ko.observable('');
+    this.flatId = ko.observable('');
+
+    var waterMeterType          = {id: 1, name: 'Water'};
+    var electricityMeterType    = {id: 2, name: 'Electricity'};
+
+    this.availableMeterTypes = ko.observableArray([
+      waterMeterType,
+      electricityMeterType
+    ]);
+    this.selectedMeterType = ko.observable(waterMeterType);
 
     self.createMeter = function() {
-    console.log("hello")
-        $.post('/api/meters', {
-            'title'         : self.title(),
-            'type'          : self.type(),
-            'meterUnitId'   : self.meterUnitId(),
-            'flatId'        : self.flatId()
-        }).then(function () {
-            self.title('');
-            self.type('');
-            self.meterUnitId('');
-            self.flatId('');
-        });
+        try {
+            if (self.title() !== '') {
+                $.post('/api/meters', {
+                    'title'         : self.title(),
+                    'type'          : this.selectedMeterType().name,
+                    'meterUnitId'   : this.selectedMeterType().id, // meterUnitId corresponds to id in meterType
+                    'flatId'        : self.flatId()
+                }).then(function () {
+                    self.title('');
+                    self.flatId('');
+                });
+            } else {
+                self.title('Title not set')
+            }
+        } catch (e) {
+            // selectedMeterType is not set
+        }
     }
 };
