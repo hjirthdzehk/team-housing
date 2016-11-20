@@ -39,6 +39,14 @@ var MainViewModel = function() {
             });
         });
 
+        this.get('#/flats/create', function() {
+                    var viewModel = new FlatsCreateViewModel();
+                    swapTemplate({
+                        name:'flats-create-template',
+                        model: viewModel
+                    });
+                });
+
         this.get('#/meters/statistics', function() {
             var viewModel = new MetersStatisticsViewModel();
             swapTemplate({

@@ -6,6 +6,8 @@ import com.github.tototoshi.play2.json4s.native._
 import models._
 import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
 
 
@@ -21,4 +23,38 @@ class Flats @Inject() (json4j: Json4s) extends Controller {
     )
   }
 
+  case class FlatCreateForm(area: BigDecimal,
+                            flatNumber: Int,
+                            balance: BigDecimal,
+                            cladrId: Int,
+                            buildingId: Int)
+
+  val flatCreateForm = Form(
+    mapping(
+      "area" -> bigDecimal,
+      "flatNumber" -> number,
+      "balance" -> bigDecimal,
+      "cladrId" -> number,
+      "buildingId" -> number
+    )(FlatCreateForm.apply)(FlatCreateForm.unapply)
+  )
+
+  def create() =
+    Action {
+      implicit req =>
+        flatCreateForm.bindFromRequest.fold(
+          formWithErrors => BadRequest("Something bad happened during Flat creation"),
+          form => {
+            val flat = Flat.create(
+              form.area,
+              form.flatNumber,
+              form.balance,
+              form.cladrId,
+              form.buildingId
+            )
+
+            Ok//(Extraction.decompose(flat))
+          }
+        )
+    }
 }

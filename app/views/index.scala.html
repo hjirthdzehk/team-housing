@@ -27,6 +27,7 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ko-binding-handlers.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersCreateViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/FlatsCreateViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MainViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
@@ -51,6 +52,7 @@
                 <li role="presentation"><a href="#/signUp">Sign Up</a></li>
                 <li role="presentation"><a href="#/serviceRequests">Service Requests</a></li>
                 <li role="presentation"><a href="#/meters/create">Create meters!</a></li>
+                <li role="presentation"><a href="#/flats/create">Create flats!</a></li>
             </ul>
         </div>
     </nav>
@@ -58,13 +60,14 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
-    @metersCreate()
     @metersStatistic()
     @measurementsHistory()
     @listDwellers()
     @signUpTemplate()
     @serviceRequests()
     @request()
+    @metersCreate()
+    @flatsCreate()
 
     <script type="text/javascript">
         new MainViewModel().run('#/measuresInput');

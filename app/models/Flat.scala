@@ -46,5 +46,32 @@ object Flat extends SQLSyntaxSupport[Flat] {
        """.map(Flat(f)).list().apply()
   }
 
+  def create(area: BigDecimal,
+             flatNumber: Int,
+             balance: BigDecimal,
+             cladrId: Int,
+             buildingId: Int)(implicit session: DBSession = autoSession): Flat = {
+    val generatedKey = sql"""
+      INSERT INTO ${Flat.table} (
+        ${column.area},
+        ${column.flatNumber},
+        ${column.balance},
+        ${column.cladrId},
+        ${column.buildingId}
+      ) VALUES (
+        ${area},
+        ${flatNumber},
+        ${balance},
+        ${cladrId},
+        ${buildingId}
+      )
+      """.updateAndReturnGeneratedKey.apply()
+      Flat(generatedKey.toInt,
+        area.doubleValue(),
+        flatNumber,
+        balance.doubleValue(),
+        cladrId,
+        buildingId)
 
+  }
 }
