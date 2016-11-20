@@ -152,4 +152,14 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
           }
         )
     }
+
+  def delete(meterId: Int) = Action {
+    Meter.find(meterId) match {
+      case Some(x) =>
+        Meter.delete(meterId)
+        NoContent
+      case _ =>
+        NotFound
+    }
+  }
 }

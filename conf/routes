@@ -12,6 +12,7 @@ POST    /meterReadings                      controllers.Meters.saveReading()
 GET     /getReadingsCosts/:meterId          controllers.Meters.getReadingsCosts(meterId: Int, dateFrom: Option[String], dateTo: Option[String])
 
 GET     /meters/:flatId                     controllers.Meters.getMeters(flatId: Int)
+DELETE  /meters/:meterId                    controllers.Meters.delete(meterId: Int)
 
 GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 

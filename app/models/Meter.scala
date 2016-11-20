@@ -71,4 +71,15 @@ object Meter extends SQLSyntaxSupport[Meter] {
       flatId
     )
   }
+
+  def find(meterId: Int)(implicit  session: DBSession = autoSession): Option[Meter] =
+    sql"""SELECT ${m.result.*} FROM ${Meter as m}
+           WHERE ${m.meterId} = ${meterId}
+      """.map(Meter(m)).single().apply()
+
+  def delete(meterId: Int)(implicit  session: DBSession = autoSession): Unit = {
+    sql"""DELETE FROM ${Meter.table}
+          WHERE ${column.meterId} = ${meterId}
+      """.update.apply()
+  }
 }
