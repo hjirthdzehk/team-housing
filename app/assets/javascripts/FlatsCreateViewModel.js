@@ -2,35 +2,35 @@
 var FlatsCreateViewModel = function() {
     var self = this;
 
-    this.title = ko.observable('');
-    this.flatId = ko.observable('');
+    this.area = ko.observable('');
+    this.flatNumber = ko.observable('');
+    this.cladrId = ko.observable('');
+    this.buildingId = ko.observable('');
 
-    var waterMeterType          = {id: 1, name: 'Water'};
-    var electricityMeterType    = {id: 2, name: 'Electricity'};
-
-    this.availableMeterTypes = ko.observableArray([
-      waterMeterType,
-      electricityMeterType
-    ]);
-    this.selectedMeterType = ko.observable(waterMeterType);
-
-    self.createMeter = function() {
-//        try {
-//            if (self.title() !== '') {
-//                $.post('/api/meters', {
-//                    'title'         : self.title(),
-//                    'type'          : this.selectedMeterType().name,
-//                    'meterUnitId'   : this.selectedMeterType().id, // meterUnitId corresponds to id in meterType
-//                    'flatId'        : self.flatId()
-//                }).then(function () {
-//                    self.title('');
-//                    self.flatId('');
-//                });
-//            } else {
-//                self.title('Title not set')
-//            }
-//        } catch (e) {
-//            // selectedMeterType is not set
-//        }
+    self.createFlat = function() {
+        try {
+            if  (self.area() !== '' && self.flatNumber !== ''
+                && self.balance !== '' && self.cladrId !== ''
+                && self.buildingId !== '') {
+                    $.post('/api/flats', {
+                        'area'          : self.area(),
+                        'flatNumber'    : self.flatNumber(),
+                        'balance'       : 0,
+                        'cladrId'       : self.cladrId(),
+                        'buildingId'    : self.buildingId()
+                    }).then(function() {
+                        self.area('');
+                        self.flatNumber('');
+                        self.cladrId('');
+                        self.buildingId('');
+                    });
+                } else {
+                    // TODO: Something was not set, make a warning
+                }
+        } catch (e) {
+            // TODO: Make proper exception handling
+            console.log("Something happened inside createFlat: ")
+            console.log(e)
+        }
     }
 };
