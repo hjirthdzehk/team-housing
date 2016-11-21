@@ -27,6 +27,7 @@ GET     /api/visited/:requestId             controllers.Visiteds.all(requestId: 
 GET     /api/commented/:requestId           controllers.Comments.all(requestId: Long)
 POST    /api/commented                      controllers.Comments.create()
 POST    /api/meters                         controllers.Meters.create()
+GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
 
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)
