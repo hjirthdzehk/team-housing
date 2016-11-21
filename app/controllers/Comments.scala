@@ -3,7 +3,7 @@ package controllers
 import javax.inject.Inject
 
 import com.github.tototoshi.play2.json4s.native._
-import models.{Commented, Visited}
+import models.Commented
 import org.joda.time.DateTime
 import org.json4s.ext.JodaTimeSerializers
 import org.json4s.{DefaultFormats, Extraction}
@@ -15,16 +15,6 @@ class Comments @Inject()(json4s: Json4s) extends Controller {
   import json4s._
 
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-
-  def all(requestId: Long) = Action {
-    val comments = Commented.findAll(requestId)
-    Ok(Extraction.decompose(comments))
-  }
-
-  case class CommentForm(personId: Long,
-                         requestId: Long,
-                         text: String)
-
   private val commentForm = Form(
     mapping(
       "personId" -> longNumber,
@@ -32,6 +22,11 @@ class Comments @Inject()(json4s: Json4s) extends Controller {
       "text" -> text
     )(CommentForm.apply)(CommentForm.unapply)
   )
+
+  def all(requestId: Long) = Action {
+    val comments = Commented.findAll(requestId)
+    Ok(Extraction.decompose(comments))
+  }
 
   def create = Action { implicit req =>
     commentForm.bindFromRequest.fold(
@@ -45,4 +40,8 @@ class Comments @Inject()(json4s: Json4s) extends Controller {
       }
     )
   }
+
+  case class CommentForm(personId: Long,
+                         requestId: Long,
+                         text: String)
 }

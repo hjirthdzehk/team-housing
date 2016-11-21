@@ -1,5 +1,6 @@
 var MainViewModel = function() {
     var self = this;
+    var userService = new UserService();
 
     this.template = ko.observable({});
     var swapTemplate = function(template) {
@@ -10,26 +11,21 @@ var MainViewModel = function() {
         self.template(template);
     };
 
-    var app = Sammy('#main', function() {
-        this.get('#/readings/submit', function() {
-            $.get('/dwellers/show/1').then(function(profileData) {
+    var showUserProfile = function () {
+        $.get('/dwellers/show/' + userService.getPersonId())
+            .then(function (profileData) {
                 var viewModel = new MetersViewModel(profileData, true);
                 swapTemplate({
                     name: 'meters-template',
                     model: viewModel
                 });
             });
-        });
+    };
 
-        this.get('#/meters', function() {
-            $.get('/dwellers/show/1').then(function(profileData) {
-                var viewModel = new MetersViewModel(profileData, false);
-                swapTemplate({
-                    name: 'meters-template',
-                    model: viewModel
-                });
-            });
-        });
+    var app = Sammy('#main', function() {
+        this.get('#/readings/submit', showUserProfile);
+
+        this.get('#/meters', showUserProfile);
 
         this.get('#/meters/create', function() {
             var viewModel = new MetersCreateViewModel();
@@ -79,6 +75,14 @@ var MainViewModel = function() {
             var viewModel = new SignUpViewModel();
             swapTemplate({
                 name: 'sign-up-template',
+                model: viewModel
+            });
+        });
+
+        this.get('#/signIn', function () {
+            var viewModel = new SignInViewModel();
+            swapTemplate({
+                name: 'sign-in-template',
                 model: viewModel
             });
         });

@@ -10,7 +10,6 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 
-
 /** Created by a.kiselev on 31/10/2016. */
 @Singleton
 class Flats @Inject() (json4j: Json4s) extends Controller {

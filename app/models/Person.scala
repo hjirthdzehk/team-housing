@@ -1,14 +1,15 @@
 package models
 
-import scalikejdbc._
 import org.joda.time.LocalDate
+import scalikejdbc._
 
-case class Person(
-  personId: Int,
-  name: String,
-  surname: String,
-  paternalName: String,
-  registrationDate: LocalDate = LocalDate.now()) {
+case class Person(personId: Int,
+                  name: String,
+                  surname: String,
+                  paternalName: String,
+                  registrationDate: LocalDate = LocalDate.now(),
+                  email: String,
+                  passwordHash: String) {
 
   def findDweller = Dweller.find(personId)
 
@@ -22,21 +23,10 @@ case class Person(
 object Person extends SQLSyntaxSupport[Person] {
 
   override val tableName = "person"
-
-  override val columns = Seq("person_id", "name", "surname", "paternal_name", "registration_date")
-
-  def apply(p: SyntaxProvider[Person])(rs: WrappedResultSet): Person = apply(p.resultName)(rs)
-  def apply(p: ResultName[Person])(rs: WrappedResultSet): Person = new Person(
-    personId = rs.get(p.personId),
-    name = rs.get(p.name),
-    surname = rs.get(p.surname),
-    paternalName = rs.get(p.paternalName),
-    registrationDate = rs.get(p.registrationDate)
-  )
-
+  override val autoSession = AutoSession
   val p = Person.syntax("p")
 
-  override val autoSession = AutoSession
+  def apply(p: SyntaxProvider[Person])(rs: WrappedResultSet): Person = apply(p.resultName)(rs)
 
   def find(personId: Int)(implicit session: DBSession = autoSession): Option[Person] = {
     sql"""select ${p.result.*} from ${Person as p} where ${p.personId} = ${personId}"""
@@ -61,27 +51,43 @@ object Person extends SQLSyntaxSupport[Person] {
       .map(Person(p.resultName)).list.apply()
   }
 
+  def apply(p: ResultName[Person])(rs: WrappedResultSet): Person = new Person(
+    personId = rs.get(p.personId),
+    name = rs.get(p.name),
+    surname = rs.get(p.surname),
+    paternalName = rs.get(p.paternalName),
+    registrationDate = rs.get(p.registrationDate),
+    email = rs.get(p.email),
+    passwordHash = rs.get(p.passwordHash)
+  )
+
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
     sql"""select count(1) from ${Person as p} where ${where}"""
       .map(_.long(1)).single.apply().get
   }
 
   def create(
-    name: String,
-    surname: String,
-    paternalName: String)(implicit session: DBSession = autoSession): Person = {
+              name: String,
+              surname: String,
+              paternalName: String,
+              email: String,
+              passwordHash: String)(implicit session: DBSession = autoSession): Person = {
     val registrationDate = LocalDate.now()
     val generatedKey = sql"""
       INSERT INTO ${Person.table} (
         ${column.name},
         ${column.surname},
         ${column.paternalName},
-        ${column.registrationDate}
+        ${column.registrationDate},
+        ${column.email},
+        ${column.passwordHash}
       ) VALUES (
         ${name},
         ${surname},
         ${paternalName},
-        ${registrationDate}
+        ${registrationDate},
+        ${email},
+        ${passwordHash}
       )
       """.updateAndReturnGeneratedKey.apply()
 
@@ -90,7 +96,10 @@ object Person extends SQLSyntaxSupport[Person] {
       name = name,
       surname = surname,
       paternalName = paternalName,
-      registrationDate = registrationDate)
+      registrationDate = registrationDate,
+      email = email,
+      passwordHash = passwordHash
+    )
   }
 
   def batchInsert(entities: Seq[Person])(implicit session: DBSession = autoSession): Seq[Int] = {
@@ -100,7 +109,8 @@ object Person extends SQLSyntaxSupport[Person] {
         'surname -> entity.surname,
         'paternalName -> entity.paternalName,
         'registrationDate -> entity.registrationDate))
-        SQL("""insert into person(
+    SQL(
+      """insert into person(
         name,
         surname,
         paternal_name,
@@ -122,7 +132,9 @@ object Person extends SQLSyntaxSupport[Person] {
         ${column.name} = ${entity.name},
         ${column.surname} = ${entity.surname},
         ${column.paternalName} = ${entity.paternalName},
-        ${column.registrationDate} = ${entity.registrationDate}
+        ${column.registrationDate} = ${entity.registrationDate},
+        ${column.email} = ${entity.email},
+        ${column.passwordHash} = ${entity.passwordHash}
       WHERE
         ${column.personId} = ${entity.personId}
       """.update.apply()
