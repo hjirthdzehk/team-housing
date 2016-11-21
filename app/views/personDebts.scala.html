@@ -1,0 +1,25 @@
+<script type="text/html" id="person-debts-template">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Debts #</div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Flat</td>
+                        <td>Meter Title</td>
+                        <td>Unpaid delta</td>
+                        <td>Rate</td>
+                        <td>Debt</td>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: debts">
+                    <td data-bind="text: flatNumber"></td>
+                    <td data-bind="text: meterTitle"></td>
+                    <td data-bind="text: unpaidDelta + ' ' + meterUnits"></td>
+                    <td data-bind="text: rate + 'P'"></td>
+                    <td data-bind="text: debt"></td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>

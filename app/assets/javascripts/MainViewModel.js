@@ -108,6 +108,17 @@ var MainViewModel = function() {
                 })
             })
         });
+
+        this.get('#/debts/:personId', function() {
+            var personId = this.params['personId'];
+            $.get('/api/debt').then(function (debts) {
+                var viewModel = new PersonalDebtsViewModel(debts);
+                swapTemplate({
+                    name: 'person-debts-template',
+                    model: viewModel
+                })
+            })
+        });
     });
 
     this.run = function(startUrl) {

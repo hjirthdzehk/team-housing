@@ -35,6 +35,7 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/SignUpViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ServiceRequestsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/RequestViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/PersonalDebtsViewModel.js")"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -46,6 +47,7 @@
             <ul class="nav navbar-nav">
                 <li role="presentation" class="active"><a href="#/readings/submit">Measure Input</a></li>
                 <li role="presentation"><a href="#/meters">Profile</a></li>
+                <li role="presentation"><a href="#/debts/1">Debts</a></li>
                 <li role="presentation"><a href="#/meters/statistics">Statistics</a></li>
                 <li role="presentation"><a href="#/history">Measures History</a></li>
                 <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
@@ -60,15 +62,15 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
+    @metersCreate()
     @metersStatistic()
     @measurementsHistory()
     @listDwellers()
     @signUpTemplate()
     @serviceRequests()
     @request()
-    @metersCreate()
     @flatsCreate()
-
+    @personDebts()
     <script type="text/javascript">
         new MainViewModel().run('#/measuresInput');
     </script>

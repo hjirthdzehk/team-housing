@@ -28,6 +28,8 @@ GET     /api/commented/:requestId           controllers.Comments.all(requestId: 
 POST    /api/commented                      controllers.Comments.create()
 POST    /api/meters                         controllers.Meters.create()
 POST    /api/flats                          controllers.Flats.create()
+GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
+GET     /api/debt                           controllers.Billing.debts
 
 GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)
