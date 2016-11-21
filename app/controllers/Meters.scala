@@ -139,7 +139,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
     Action {
       implicit req =>
         meterCreateForm.bindFromRequest.fold(
-          formWithErrors => BadRequest("Something bad happened"),
+          formWithErrors => BadRequest("Something bad happened during Meter creation"),
           form => {
             val meter = Meter.create(
               form.title,

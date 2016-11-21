@@ -1,0 +1,54 @@
+<script type="text/html" id="flats-create-template">
+<form class="form-horizontal" action='' method="POST">
+    <fieldset>
+        <div id="legend">
+            <legend class=""><h1>Create your own flat!</h1></legend>
+        </div>
+        <div class="control-group" left="100">
+                <!-- Flat area -->
+            <label class="control-label"  for="name">Area</label>
+            <div class="controls">
+                <input type="number" id="area" value="" name="area" placeholder="" class="input-xlarge" data-bind="value: area">
+                <p class="help-block">Area in squared meters</p>
+            </div>
+        </div>
+
+        <div class="control-group" left="100">
+                <!-- Flat number -->
+            <label class="control-label"  for="name">Flat number</label>
+            <div class="controls">
+                <input type="number" id="flatNumber" value="" name="flatNumber" placeholder=""
+                class="input-xlarge" data-bind="value: flatNumber">
+                <p class="help-block">Number of the flat</p>
+            </div>
+        </div>
+
+        <div class="control-group" left="100">
+                <!-- Cladr Id -->
+            <label class="control-label"  for="name">Cladr Id</label>
+            <div class="controls">
+                <input type="number" id="cladrId" value="" name="cladrId" placeholder=""
+                class="input-xlarge" data-bind="value: cladrId">
+                <p class="help-block">Id in the cladr database</p>
+            </div>
+        </div>
+
+        <div class="control-group" left="100">
+                <!-- Building Id -->
+            <label class="control-label"  for="name">Building Id</label>
+            <div class="controls">
+                <input type="number" id="buildingId" value="" name="buildingId" placeholder=""
+                class="input-xlarge" data-bind="value: buildingId">
+                <p class="help-block">Id of the building</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+                <!-- Button -->
+            <div class="controls">
+                <button class="btn btn-success" data-bind="click: createFlat">Create</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+</script>
