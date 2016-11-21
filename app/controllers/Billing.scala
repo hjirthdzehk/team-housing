@@ -12,6 +12,9 @@ class Billing @Inject() (json4s: Json4s) extends Controller{
   import json4s._
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
   def debt(personId: Long) = Action{
-    Ok(Extraction.decompose(Billing.getPersonDebt(personId).get))
+    Ok(Extraction.decompose(Billing.getPersonDebt(personId)))
+  }
+  def debts() = Action {
+    Ok(Extraction.decompose(Billing.getPersonDebts()))
   }
 }
