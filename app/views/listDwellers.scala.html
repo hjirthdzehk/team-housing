@@ -1,4 +1,5 @@
 <script type="text/html" id="list-dwellers-template">
+<div class="container">
     <div class="panel panel-primary">
         <div class="panel-heading">Dwellers in the System</div>
         <div class="panel-body">
@@ -9,6 +10,7 @@
                         <td>Name</td>
                         <td>Surname</td>
                         <td>Paternal Name</td>
+                    <td>Email</td>
                         <td>Registration Date</td>
                     </tr>
                 </thead>
@@ -17,6 +19,7 @@
                     <td data-bind="text: name"></td>
                     <td data-bind="text: surname"></td>
                     <td data-bind="text: paternalName"></td>
+                <td data-bind="text: email"></td>
                     <td>
                         <span data-bind="text: registrationDate.day"></span>-<span data-bind="text: registrationDate.month"></span>-<span data-bind="text: registrationDate.year"></span>
                     </td>
@@ -24,4 +27,5 @@
             </table>
         </div>
     </div>
+</div>
 </script>

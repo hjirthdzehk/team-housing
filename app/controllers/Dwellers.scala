@@ -9,7 +9,7 @@ import org.json4s.ext.JodaTimeSerializers
 import org.json4s.{DefaultFormats, Extraction}
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.mvc.{Action, Controller}
+import play.api.mvc.{Action, Controller, Cookie}
 import scalikejdbc._
 
 case class MeterReadingData(date: String,
@@ -36,6 +36,15 @@ object MeterData {
 case class ProfileData(personName: String,
                        metersByFlat: Map[String, Seq[MeterData]])
 
+case class SignUpForm(name: String,
+                      surname: String,
+                      paternalName: String,
+                      //                      address: String, // TODO for next version
+                      email: String,
+                      passwordHash: String)
+
+case class SignInForm(email: String,
+                      passwordHash: String)
 
 /** Created by a.kiselev on 31/10/2016. */
 class Dwellers @Inject() (json4j: Json4s) extends Controller {
@@ -45,31 +54,59 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
     mapping(
       "name" -> text,
       "surname" -> text,
-      "paternalName" -> text
+      "paternalName" -> text,
+      //      "address" -> text, // TODO for next version
+      "email" -> text,
+      "passwordHash" -> text
     )(SignUpForm.apply)(SignUpForm.unapply)
+  )
+  val signInForm = Form(
+    mapping(
+      "email" -> text,
+      "passwordHash" -> text
+    )(SignInForm.apply)(SignInForm.unapply)
   )
 
   def findById(personId: Int) = Action {
-    Ok(Extraction.decompose(
-      Person.find(personId))
-    )
+    Person.find(personId)
+      .map(Extraction.decompose)
+      .map(Ok(_))
+      .getOrElse(NotFound)
   }
 
   def signUp() =
     Action { implicit req =>
       signUpForm.bindFromRequest.fold(
-        formWithErrors => BadRequest("Error"), // TODO better error handling
+        formWithErrors => BadRequest("Error: " + formWithErrors.toString), // TODO better error handling
         form => {
           val person = Person.create(
-            form.name,
-            form.surname,
-            form.paternalName)
-          Dweller.create(person.personId)
+            name = form.name,
+            surname = form.surname,
+            paternalName = form.paternalName,
+            email = form.email,
+            passwordHash = form.passwordHash)
+          Dweller.create(person.personId) // TODO deffer making person a dweller
 
-          Ok(Extraction.decompose(person))
+          Ok(s"${person.personId}")
+            .withCookies(Cookie("person_id", person.personId.toString))
         }
       )
     }
+
+  def signIn() = Action { implicit req =>
+    import Person.p
+
+    signInForm.bindFromRequest.fold(
+      formWithErrors => BadRequest("Error"), // TODO better error handling
+      form => {
+        Person.findBy(sqls"${p.email} = ${form.email} and ${p.passwordHash} = ${form.passwordHash}")
+          .map(_.personId)
+          .map(id => Ok(s"$id")
+            .withCookies(Cookie("person_id", id.toString)))
+          .getOrElse(NotFound)
+      }
+    )
+  }
 
   def listAll()(implicit session: DBSession = autoSession) =
     Action {
@@ -112,9 +149,5 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
           )
         }}.head))
   }
-
-  case class SignUpForm(name: String,
-                        surname: String,
-                        paternalName: String)
 
 }

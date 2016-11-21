@@ -6,14 +6,18 @@ var SignUpViewModel = function() {
     self.name = ko.observable('');
     self.surname = ko.observable('');
     self.paternalName = ko.observable('');
+    self.email = ko.observable('');
+    self.password = ko.observable('');
 
     self.register = function() {
         $.post('/dwellers/signUp', {
             'name' : self.name(),
             'surname' : self.surname(),
-            'paternalName' : self.paternalName()
-        }).then(function() {
-            self.name('');
+            'paternalName': self.paternalName(),
+            'email': self.email(),
+            'passwordHash': md5(self.password())
+        }).then(function (personId) {
+            window.location = '#/dwellers/show/' + personId;
         });
     }
 };
