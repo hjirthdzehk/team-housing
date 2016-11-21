@@ -77,7 +77,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
       }
     )
   }
-    
+
   def all(flatId: Int) = Action {
     val flatNumber = Flat.findById(flatId.toInt)
       .map(f => f.flatNumber).getOrElse(-1)
