@@ -8,7 +8,6 @@ import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
 import play.api.mvc._
 
-
 /** Created by a.kiselev on 31/10/2016. */
 @Singleton
 class Flats @Inject() (json4j: Json4s) extends Controller {

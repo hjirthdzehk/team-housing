@@ -3,20 +3,22 @@ package controllers
 import javax.inject.Inject
 
 import com.github.tototoshi.play2.json4s.native.Json4s
-import org.json4s.{DefaultFormats, Extraction}
-import play.api.mvc.{Action, Controller}
+import models.Meter.autoSession
 import models.{MeterReading, _}
 import org.json4s.ext.JodaTimeSerializers
+import org.json4s.{DefaultFormats, Extraction}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.mvc.{Action, Controller}
 import scalikejdbc._
-import models.Meter.autoSession
 
 case class MeterReadingData(date: String,
                             value: String)
 
 object MeterReadingData {
-  def fromMeterReading(mr: MeterReading) = MeterReadingData(mr.date.toString, mr.value.toString)
+  def fromMeterReading(mr: MeterReading) = MeterReadingData(
+    mr.date.toString,
+    mr.value.toString)
 }
 case class MeterData(id:Int,
                      title: String,
@@ -39,17 +41,6 @@ case class ProfileData(personName: String,
 class Dwellers @Inject() (json4j: Json4s) extends Controller {
   import json4j._
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-
-  def findById(personId: Int) = Action {
-    Ok(Extraction.decompose(
-      Person.find(personId))
-    )
-  }
-
-  case class SignUpForm(name: String,
-                        surname: String,
-                        paternalName: String)
-
   val signUpForm = Form(
     mapping(
       "name" -> text,
@@ -57,6 +48,12 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
       "paternalName" -> text
     )(SignUpForm.apply)(SignUpForm.unapply)
   )
+
+  def findById(personId: Int) = Action {
+    Ok(Extraction.decompose(
+      Person.find(personId))
+    )
+  }
 
   def signUp() =
     Action { implicit req =>
@@ -72,25 +69,27 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
           Ok(Extraction.decompose(person))
         }
       )
-  }
+    }
 
   def listAll()(implicit session: DBSession = autoSession) =
     Action {
-      import models.Dweller.d
-      import models.Person.p
+      import Dweller.d
+      import Person.p
 
       val dwellers =
         sql"""
              select ${p.result.*} from ${Dweller as d}
              natural join ${Person as p}
-           """.map(Person(p.resultName)).list().apply()
+        """.map(Person(p.resultName)).list().apply()
 
       Ok(Extraction.decompose(dwellers))
     }
 
   def getProfileData(personId: Int)(implicit session: DBSession = autoSession) = Action {
     val (d, p, f, m, df) = (Dweller.d, Person.p, Flat.f, Meter.m, DwellerLivesInFlat.df)
-    val query = sql"""select ${d.result.*}, ${p.result.*}, ${f.result.*}, ${m.result.*}
+    val query =
+      sql"""
+          select ${d.result.*}, ${p.result.*}, ${f.result.*}, ${m.result.*}
           from ${Dweller as d} natural join ${Person as p}
             natural join ${DwellerLivesInFlat as df}
             natural join ${Flat as f}
@@ -113,5 +112,9 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
           )
         }}.head))
   }
+
+  case class SignUpForm(name: String,
+                        surname: String,
+                        paternalName: String)
 
 }

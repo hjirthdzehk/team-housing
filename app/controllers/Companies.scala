@@ -1,6 +1,7 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
+
 import com.github.tototoshi.play2.json4s.native._
 import models._
 import org.json4s._
@@ -14,29 +15,22 @@ import play.api.mvc._
 class Companies @Inject() (json4s: Json4s) extends Controller {
   import json4s._
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-
-  def all = Action {
-    Ok(Extraction.decompose(Company.findAll))
-  }
-
-  def show(id: Long) = Action {
-    Company.find(id) match {
-      case Some(company) => Ok(Extraction.decompose(company))
-      case _ => NotFound
-    }
-  }
-
-  case class CompanyForm(
-    name: String,
-    url: Option[String] = None
-  )
-
   private val companyForm = Form(
     mapping(
       "name" -> text.verifying(nonEmpty),
       "url" -> optional(text)
     )(CompanyForm.apply)(CompanyForm.unapply)
   )
+
+  def all = Action {
+    Ok(Extraction.decompose(Company.findAll))
+  }
+
+  def show(id: Long) = Action {
+    Company.find(id)
+      .map(Extraction.decompose).map(Ok(_))
+      .getOrElse(NotFound)
+  }
 
   def create = Action { implicit req =>
     companyForm.bindFromRequest.fold(
@@ -57,4 +51,9 @@ class Companies @Inject() (json4s: Json4s) extends Controller {
       case _ => NotFound
     }
   }
+
+  case class CompanyForm(
+                          name: String,
+                          url: Option[String] = None
+                        )
 }

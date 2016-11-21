@@ -1,26 +1,17 @@
 package controllers
 
-//import javax.inject.{Inject, Singleton}
-//
-//import com.github.tototoshi.play2.json4s.native.Json4s
-//import models.{MeterReading, _}
-//import org.joda.time.DateTime
-//import org.json4s.ext.JodaTimeSerializers
-//import org.json4s.{DefaultFormats, Extraction}
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.mvc._
-import play.api.libs.json.Json
-import scalikejdbc._
-import models.Meter.autoSession
-
 import javax.inject.{Inject, Singleton}
 
 import com.github.tototoshi.play2.json4s.native._
+import models.Meter.autoSession
 import models._
 import org.joda.time.DateTime
-import org.json4s._
 import org.json4s.ext.JodaTimeSerializers
+import play.api.data.Form
+import play.api.data.Forms._
+import play.api.libs.json.Json
+import play.api.mvc._
+import scalikejdbc._
 
 case class MeterReadingCost(title: String,
                             date: DateTime,
@@ -39,8 +30,7 @@ object MeterReadingCost extends SQLSyntaxSupport[MeterReadingCost] {
 }
 
 case class MeterListItem(title: String,
-                         meterId: Int
-                        )
+                         meterId: Int)
 
 object MeterListItem extends SQLSyntaxSupport[Meter] {
   def apply( m: SyntaxProvider[Meter]): (WrappedResultSet) => MeterListItem =
@@ -58,44 +48,14 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
   import org.json4s._
 
   implicit val formats = DefaultFormats ++ JodaTimeSerializers.all
-
-  def getMeters(flatId: Int)(implicit session: DBSession = autoSession) = Action {
-    val m = Meter.m
-    var query =
-      sql"""
-            select ${m.result.title}, ${m.result.meterId}
-            from ${Meter as m}
-            where ${m.flatId} = ${flatId}
-            """.map(MeterListItem(m)).list.apply()
-    implicit val meterListItemFormat = Json.format[MeterListItem]
-    Ok(Json.obj("meterListItems" -> query))
-  }
-
-  def getReadingsCosts(meterId: Int,
-                       dateFromStr: Option[String],
-                       dateToStr: Option[String])(implicit session: DBSession = autoSession) = Action {
-    val (mr, r, m) = (MeterReading.mr, Rate.r, Meter.m)
-
-    val dateFrom = DateTime.parse(dateFromStr.get)
-    val dateTo = DateTime.parse(dateToStr.get)
-
-    val query =
-      sql"""
-          select ${m.result.title}, ${mr.result.date}, mr.value * r.value as cost
-          from ${MeterReading as mr}, ${Meter as m} , ${Rate as r}
-          where ${m.meterId} = ${mr.meterId} and ${m.meterUnitId} = ${r.meterUnitId}
-          and ${r.dateFrom} <= ${mr.date} and ${r.dateTo} >= ${mr.date} and ${mr.paid} = false and ${m.meterId}=${meterId}
-          and ${mr.date} >= ${dateFrom} and ${mr.date} <= ${dateTo}
-          order by date desc;
-         """.map(MeterReadingCost(mr, m)).list.apply()
-    implicit val meterReadingCostFormat = Json.format[MeterReadingCost]
-    Ok(Json.obj("readingCosts" -> query))
-  }
-
-  case class MeterReadingForm(meterId: Int,
-                              value: BigDecimal,
-                              date: DateTime)
-
+  val meterCreateForm = Form(
+    mapping(
+      "title" -> text,
+      "type" -> text,
+      "meterUnitId" -> number,
+      "flatId" -> number
+    )(MeterCreateForm.apply)(MeterCreateForm.unapply)
+  )
   private val meterReadingForm = Form(
     mapping(
       "meterId" -> number,
@@ -103,6 +63,41 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
       "date" -> jodaDate
     )(MeterReadingForm.apply)(MeterReadingForm.unapply)
   )
+
+  def getMeters(flatId: Int)(implicit session: DBSession = autoSession) = Action {
+    implicit val meterListItemFormat = Json.format[MeterListItem]
+    import Meter.m
+    val query =
+      sql"""
+            select ${m.result.title}, ${m.result.meterId}
+            from ${Meter as m}
+            where ${m.flatId} = ${flatId}
+      """.map(MeterListItem(m)).list.apply()
+    Ok(Json.obj("meterListItems" -> query))
+  }
+
+  def getReadingsCosts(meterId: Int,
+                       dateFromStr: Option[String],
+                       dateToStr: Option[String])(implicit session: DBSession = autoSession) = Action {
+    import Meter.m
+    import MeterReading.mr
+    import Rate.r
+    implicit val meterReadingCostFormat = Json.format[MeterReadingCost]
+
+    val dateFrom = DateTime.parse(dateFromStr.get)
+    val dateTo = DateTime.parse(dateToStr.get)
+    val query =
+      sql"""
+          select ${m.result.title}, ${mr.result.date}, mr.value * r.value as cost
+          from ${MeterReading as mr}, ${Meter as m} , ${Rate as r}
+          where ${m.meterId} = ${mr.meterId} and ${m.meterUnitId} = ${r.meterUnitId}
+          and ${r.dateFrom} <= ${mr.date} and ${r.dateTo} >= ${mr.date}
+          and ${mr.paid} = false and ${m.meterId} = ${meterId}
+          and ${mr.date} >= ${dateFrom} and ${mr.date} <= ${dateTo}
+          order by date desc;
+      """.map(MeterReadingCost(mr, m)).list.apply()
+    Ok(Json.obj("readingCosts" -> query))
+  }
 
   def saveReading = Action { implicit req =>
     meterReadingForm.bindFromRequest.fold(
@@ -121,20 +116,6 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
     )
   }
 
-  case class MeterCreateForm(title: String,
-                             `type`: String,
-                             meterUnitId: Int,
-                             flatId: Int)
-
-  val meterCreateForm = Form(
-    mapping(
-      "title" -> text,
-      "type" -> text,
-      "meterUnitId" -> number,
-      "flatId" -> number
-    )(MeterCreateForm.apply)(MeterCreateForm.unapply)
-  )
-
   def create() =
     Action {
       implicit req =>
@@ -145,9 +126,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
               form.title,
               form.`type`,
               form.meterUnitId,
-              form.flatId
-            )
-
+              form.flatId)
             Ok//(Extraction.decompose(meter))
           }
         )
@@ -162,4 +141,13 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
         NotFound
     }
   }
+
+  case class MeterReadingForm(meterId: Int,
+                              value: BigDecimal,
+                              date: DateTime)
+
+  case class MeterCreateForm(title: String,
+                             `type`: String,
+                             meterUnitId: Int,
+                             flatId: Int)
 }
