@@ -35,18 +35,10 @@ object ServiceRequestViewModel {
         sreqs = sreqs.map(ServiceRequestViewModel.apply),
         flatNumber = flatNumber
     )
-
-    def apply(sr: ServiceRequest, flatNumber: Int): RequestInfo = RequestInfo(
-        sreq = apply(sr),
-        flatNumber = flatNumber
-    )
 }
 
 case class RequestsInfo(sreqs: Seq[ServiceRequestViewModel],
                         flatNumber: Int)
-
-case class RequestInfo(sreq: ServiceRequestViewModel,
-                       flatNumber: Int)
 
 @Singleton
 class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
@@ -85,7 +77,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
       }
     )
   }
-
+    
   def all(flatId: Int) = Action {
     val flatNumber = Flat.findById(flatId.toInt)
       .map(f => f.flatNumber).getOrElse(-1)
@@ -104,11 +96,33 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     ))
   }
 
-    def all() = Action {
-        val requestInfoList = ServiceRequest.findAllActive()
-            .map(sr => ServiceRequestViewModel(sr, sr.flatNumber.getOrElse(-1)))
+    def all(flatId: Int) = Action {
+        val flatNumber = Flat.findById(flatId)
+            .map(f => f.flatNumber).getOrElse(-1)
 
-        Ok(Extraction.decompose(requestInfoList))
+        val requests = ServiceRequest.findAllForFlat(flatId)
+        var serviceReqs = Seq[ServiceRequestViewModel]()
+        requests.foreach(sr => serviceReqs = serviceReqs :+ ServiceRequestViewModel(
+            id = sr.id,
+            description = sr.description,
+            rating = sr.rating,
+            status = sr.status,
+            nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
+            totalCost = Visited.getTotalCost(sr.id)))
+
+        Ok(Extraction.decompose(
+            RequestsInfo(serviceReqs, flatNumber)
+        ))
+    }
+
+    def allActive() = Action {
+        Ok(Extraction.decompose(
+            Flat.all().map(f =>
+                ServiceRequestViewModel(
+                    ServiceRequest.findAllActiveForFlat(f.flatId),
+                    f.flatNumber)
+            )
+        ))
     }
 
     case class ServiceRequestForm(description: String,
