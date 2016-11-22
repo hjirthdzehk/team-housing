@@ -68,17 +68,9 @@ var MainViewModel = function() {
         });
 
         this.get('#/meters/statistics', function () {
-            var viewModel = new MetersStatisticsViewModel();
-            swapTemplate({
-                name: 'meters-statistic-template',
-                model: viewModel
-            });
-        });
-
-        this.get('#/meters/statistics', function () {
             var userId = userService.getPersonId();
             $.get('/dwellers/show/' + userId).then(function (profileData) {
-                var viewModel = new MetersStatisticsViewModel(profileData);
+                var viewModel = new MetersStatisticsViewModel(profileData, userId);
                 swapTemplate({
                     name: 'meters-statistic-template',
                     model: viewModel
@@ -124,7 +116,7 @@ var MainViewModel = function() {
 
         this.get('#/serviceRequests/getInfo/:requestId', function () {
             var requestId = this.params['requestId'];
-            var isEditable = true; //check if logined user is admin
+            var isEditable = false; //check if logined user is admin
             var personId = 1;
             $.when($.get('/api/request/' + requestId),
                 $.get('/api/visited/' + requestId),

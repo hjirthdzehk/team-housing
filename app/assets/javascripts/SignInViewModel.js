@@ -9,7 +9,7 @@ var SignInViewModel = function () {
     self.signIn = function () {
         new UserService().login(self.email(), self.password())
             .then(function (personId) {
-                window.location = '/#/dwellers/show/' + personId;
+                window.location = '/#/';
             });
     }
 };
