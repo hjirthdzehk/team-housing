@@ -121,8 +121,8 @@ var MainViewModel = function() {
             })
         });
 
-        this.get('#/debts/:personId', function() {
-            var personId = this.params['personId'];
+        this.get('#/debts', function() {
+            var personId = userService.getPersonId();
             $.get('/api/debt').then(function (debts) {
                 var viewModel = new PersonalDebtsViewModel(debts);
                 swapTemplate({
