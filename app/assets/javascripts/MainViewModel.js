@@ -186,15 +186,15 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
-
-        this.run = function (startUrl) {
-            app.run(startUrl);
-        };
-        $(".nav a").on("click", function () {
-            $(".nav").find(".active").removeClass("active");
-            $(this).parent().addClass("active");
-        });
-
-        ko.applyBindings(self, $('#main')[0]);
     });
+
+    this.run = function (startUrl) {
+        app.run(startUrl);
+    };
+    $(".nav a").on("click", function () {
+        $(".nav").find(".active").removeClass("active");
+        $(this).parent().addClass("active");
+    });
+
+    ko.applyBindings(self, $('#main')[0]);
 };
