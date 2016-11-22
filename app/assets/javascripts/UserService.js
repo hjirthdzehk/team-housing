@@ -44,4 +44,8 @@ var UserService = function () {
     this.isLoginedAsAdmin = function() {
         return !getCookie("personId");
     };
+
+    this.isAdmin = function () {
+        return !!$.get('/dwellers/isAdmin/' + this.getPersonId());
+    }
 };
