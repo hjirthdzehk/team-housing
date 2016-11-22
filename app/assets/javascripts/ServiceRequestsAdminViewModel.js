@@ -5,9 +5,13 @@
 var ServiceRequestsAdminViewModel = function (requestsInfoList) {
     var self = this;
 
+    self.newRequestDescription = ko.observable('');
+    self.flatId = ko.observable('');
+
     self.requestsInfoList = ko.observable(requestsInfoList
         .map(function (ri) {
             return {
+                flatId: ko.observable(ri.flatId),
                 flatNumber: ko.observable(ri.flatNumber),
                 serviceRequests: ko.observableArray(ri.sreqs
                     .map(function (sr) {
@@ -24,5 +28,15 @@ var ServiceRequestsAdminViewModel = function (requestsInfoList) {
                 )
             }
         })
-    )
+    );
+
+    self.createRequest = function () {
+        if (self.newRequestDescription() !== '') {
+            $.post('/api/requests/create/' + self.flatId(), {
+                'description':  self.newRequestDescription()
+            }).then(function () {
+                self.newRequestDescription('');
+            });
+        }
+    }
 };

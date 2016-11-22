@@ -5,7 +5,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Flat #<span data-bind="text: flatNumber"></span></h3>
             </div>
-            <<div class="panel-body">
+            <div class="panel-body">
                 <table class="table">
                     <thead>
                         <tr>
@@ -70,8 +70,38 @@
                         </tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRequestModal"
+                    data-bind="click: function(data){this.flatId(data.flatId());}.bind($parent, $data)">New request</button>
             </div>
         </div>
         <!-- /ko -->
+    </div>
+    <div class="modal fade" id="addRequestModal" tabindex="-1" role="dialog" aria-labelledby="addComentLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addRequestLabel">Add new request</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="description">Description</label>
+                        <div class="col-md-10 input-group">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </div>
+                            <textarea id="newRequest"
+                            class="form-control"
+                            rows="1"
+                            data-bind="value: newRequestDescription"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: createRequest">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 </script>
