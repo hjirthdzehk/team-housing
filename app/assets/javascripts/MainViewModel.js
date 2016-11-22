@@ -186,4 +186,9 @@ var MainViewModel = function() {
     });
 
     ko.applyBindings(self, $('#main')[0]);
+
+    $('#signOut').click(function() {
+        userService.logOut();
+        location.reload();
+    });
 };

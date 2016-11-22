@@ -44,6 +44,12 @@ var UserService = function () {
         return !!getCookie("personId");
     };
 
+    this.logOut = function() {
+        setCookie("personId", '',0);
+        setCookie("isAdmin", '',0);
+    };
+
+
     this.isAdmin = function () {
         return getCookie("isAdmin");
     }
