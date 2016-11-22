@@ -20,7 +20,25 @@ var MeasurementsHistoryViewModel = function (meterHistory) {
                                 paid: ko.observable(meterReading.paid ? "Paid" : "Not paid")
                             }
                         }
-                    ))
+                    )),
+                    plotData: {
+                        labels: _.map(meter.meterReadings,
+                            function (meterReading) {
+                                return moment(meterReading.date).format('MMM-DD-YYYY HH:MM')
+                            }),
+                        datasets: [{
+                            label: meter.meterTitle,
+                            data: _.map(meter.meterReadings, function (meterReading) {
+                                return meterReading.value
+                            }),
+                            backgroundColor: "rgba(220,220,220,0.2)",
+                            borderColor: "rgba(220,220,220,1)",
+                            pointColor: "rgba(220,220,220,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)"
+                        }]
+                    }
                 }
             }
         ));
