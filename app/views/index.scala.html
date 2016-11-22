@@ -33,7 +33,6 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ListDwellersViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ServiceRequestsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/RequestViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/PersonalDebtsViewModel.js")"></script>
@@ -46,12 +45,11 @@
             </div>
 
             <ul class="nav navbar-nav">
-                <li role="presentation" class="active"><a href="#/readings/submit">Measure Input</a></li>
-                <li role="presentation"><a href="#/meters">Profile</a></li>
-                <li role="presentation"><a href="#/debts/1">Debts</a></li>
-                <li role="presentation"><a href="#/meters/statistics">Statistics</a></li>
+                <li role="presentation"><a href="#/meters">Meters</a></li>
+                <li role="presentation" class="active"><a href="#/readings/submit">Input Measures</a></li>
                 <li role="presentation"><a href="#/history">Measures History</a></li>
-                <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
+                <li role="presentation"><a href="#/meters/statistics">Statistics</a></li>
+                <li role="presentation"><a href="#/debts/1">Debts</a></li>
                 <li role="presentation"><a href="#/serviceRequests/forFlat/1">Service Requests</a></li>
             </ul>
         </div>
@@ -60,10 +58,8 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
-
     @metersStatistic()
     @measurementsHistory()
-    @listDwellers()
     @serviceRequests()
     @request()
     @personDebts()
