@@ -37,6 +37,7 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/RequestViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/PersonalDebtsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ProfileViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/CreateRequestViewModel.js")"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -49,7 +50,6 @@
                 <li role="presentation"><a href="#/readings/submit">Input Measures</a></li>
                 <li role="presentation"><a href="#/meters/statistics">Statistics</a></li>
                 <li role="presentation"><a href="#/debts">Debts</a></li>
-                <li role="presentation"><a href="#/serviceRequests/forFlat/1">Service Requests</a></li>
             </ul>
         </div>
     </nav>
@@ -63,6 +63,7 @@
     @request()
     @personDebts()
     @profile()
+    @requestCreate()
 
     <script type="text/javascript">
         new MainViewModel().run('#/');
