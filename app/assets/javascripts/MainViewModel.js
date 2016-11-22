@@ -14,22 +14,22 @@ var MainViewModel = function() {
 
         self.template(template);
     };
-
     var app = Sammy('#main', function() {
-        this.get('#/', function () {
-            if (userService.isLoginedAsUser()) {
-                $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
-                    var viewModel = new ProfileViewModel(profileData);
-                    swapTemplate({
-                        name: 'profile-template',
-                        model: viewModel
-                    })
-                });
-            } else {
+        this.before({except: []}, function() {
+            if (!userService.isLoginedAsUser()) {
                 document.location = '/login';
             }
         });
 
+        this.get('#/', function () {
+            $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
+                var viewModel = new ProfileViewModel(profileData);
+                swapTemplate({
+                    name: 'profile-template',
+                    model: viewModel
+                })
+            });
+        });
 
         this.get('#/readings/submit', function () {
             $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
@@ -40,16 +40,6 @@ var MainViewModel = function() {
                 });
             });
         });
-
-        // this.get('#/meters', function() {
-        //     $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
-        //         var viewModel = new MetersViewModel(profileData, false);
-        //         swapTemplate({
-        //             name: 'meters-template',
-        //             model: viewModel
-        //         });
-        //     });
-        // });
 
         this.get('#/person/:personId', function () {
             $.get('/dwellers/show/' + this.params['personId']).then(function (profileData) {
