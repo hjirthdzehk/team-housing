@@ -85,6 +85,17 @@ var MainViewModel = function() {
             });
         });
 
+        this.get('#/meters/statistics', function () {
+            var userId = userService.getPersonId();
+            $.get('/dwellers/show/' + userId).then(function (profileData) {
+                var viewModel = new MetersStatisticsViewModel(profileData);
+                swapTemplate({
+                    name: 'meters-statistic-template',
+                    model: viewModel
+                });
+            });
+        });
+
         this.get('#/history/:flatId', function () {
             $.get('/history/byFlatId/' + this.params['flatId']).then(function (historyGroups) {
                 var viewModel = new MeasurementsHistoryViewModel(historyGroups);
