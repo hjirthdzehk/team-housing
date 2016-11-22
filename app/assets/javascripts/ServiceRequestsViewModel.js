@@ -17,9 +17,13 @@ var ServiceRequestsViewModel = function(requestsInfo) {
                     id: sreq.id,
                     description: ko.observable(sreq.description),
                     status: ko.observable(sreq.status),
-                    nextVisitDate: ko.observable(moment(sreq.nextVisitDate).format('MMM Do YYYY')),
+                    nextVisitDate: ko.observable(sreq.nextVisitDate !== null
+                        ? moment(sreq.nextVisitDate).format('MMM-DD-YYYY HH:MM')
+                        :  "not defined"),
                     totalCost: ko.observable(sreq.totalCost),
-                    creationDate: ko.observable(moment(sreq.creationDate).format('MMM Do YYYY')),
+                    creationDate: ko.observable(sreq.creationDate !== null
+                        ? moment(sreq.creationDate).format('MMM-DD-YYYY HH:MM')
+                        : "not defined"),
                     rating: ko.observable(sreq.rating)
                 }
             }

@@ -4,12 +4,12 @@ import org.joda.time.DateTime
 import scalikejdbc._
 
 case class ServiceRequest (
-    id: Long,
-    description: String,
-    rating: Option[Int],
-    creationDate: DateTime,
-    status: Option[Int]
-)
+                              id: Long,
+                              description: String,
+                              rating: Option[Int],
+                              creationDate: DateTime,
+                              status: Option[Int]
+                          )
 
 object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
     def apply(srName: ResultName[ServiceRequest])(rs: WrappedResultSet): ServiceRequest = new ServiceRequest(
@@ -26,7 +26,7 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
 
     val sr = ServiceRequest.syntax("sr")
 
-    def create(flatId: Int,
+    def create(flatId: Long,
                description: String)
               (implicit session: DBSession = autoSession): ServiceRequest = {
         val id =
@@ -34,7 +34,7 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
                   (${column.description}, ${column.rating}, ${column.creationDate}, ${column.status})
                  VALUES (${description}, ${0}, ${DateTime.now}, ${0})
                """
-            .updateAndReturnGeneratedKey.apply()
+                .updateAndReturnGeneratedKey.apply()
 
         RequestToFlat.create(id, flatId)
 
@@ -53,8 +53,8 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
     }
 
     def get(requestId: Long)(implicit session: DBSession = autoSession) : ServiceRequest = {
-      sql"""select ${sr.result.*} from ${ServiceRequest as sr} where ${sr.id} = ${requestId}"""
-        .map(ServiceRequest(sr)).single().apply().get
+        sql"""select ${sr.result.*} from ${ServiceRequest as sr} where ${sr.id} = ${requestId}"""
+            .map(ServiceRequest(sr)).single().apply().get
     }
 
     def findAllForFlat(flatId: Long)
@@ -71,7 +71,7 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
     }
 
     def findAllActiveForFlat(flatId: Long)
-                     (implicit session: DBSession = autoSession): List[ServiceRequest] = {
+                            (implicit session: DBSession = autoSession): List[ServiceRequest] = {
         import RequestToFlat.rtf
         sql"""
              SELECT ${sr.result.*}
@@ -94,10 +94,10 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
            FROM ${Visited as v}
            INNER JOIN ${ServiceRequest as sr}
            ON ${v.serviceRequsetId} = ${sr.id}
-           WHERE ${sr.id} = ${requestId} AND ${sr.status} = 1
-           ORDER BY ${v.scheduleTime} DESC
+           WHERE ${sr.id} = ${requestId}
+           ORDER BY ${v.scheduleTime} ASC
            LIMIT 1
            """
-              .map(rs => rs.jodaDateTime(v.resultName.scheduleTime)).single().apply()
+            .map(rs => rs.jodaDateTime(1)).single().apply()
     }
 }
