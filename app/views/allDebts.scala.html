@@ -1,0 +1,34 @@
+<script type="text/html" id="all-debts-template">
+    <!-- ko foreach: debtsByDwellers -->
+    <div class="panel panel-primary">
+        <div class="panel-heading" data-bind="text: person"></div>
+        <div class="panel-body">
+            <!-- ko foreach: debtsByFlats-->
+            <div class="panel panel-primary">
+                <div class="panel-heading">Flat #<!-- ko text: flat --><!-- /ko --></div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <td>Meter Title</td>
+                                <td>Unpaid delta</td>
+                                <td>Rate</td>
+                                <td>Debt</td>
+                            </tr>
+                        </thead>
+                        <tbody data-bind="foreach: debts">
+                            <tr>
+                                <td data-bind="text: meterTitle"></td>
+                                <td data-bind="text: unpaidDelta + ' ' + meterUnits"></td>
+                                <td data-bind="text: rate + 'P'"></td>
+                                <td data-bind="text: debt"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
+    </div>
+    <!-- /ko -->
+</script>

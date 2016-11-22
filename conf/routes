@@ -15,15 +15,15 @@ POST    /meterReadings                      controllers.Meters.saveReading()
 GET     /getReadingsCosts/:meterId          controllers.Meters.getReadingsCosts(meterId: Int, dateFrom: Option[String], dateTo: Option[String])
 
 GET     /meters/:flatId                     controllers.Meters.getMeters(flatId: Int)
-DELETE        /meters/:meterId                    controllers.Meters.delete(meterId: Int)
+DELETE  /meters/:meterId                    controllers.Meters.delete(meterId: Int)
 
-GET           /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
+GET     /flats/findById/:flatId             controllers.Flats.findById(flatId: Int)
 
-GET           /dwellers/findById/:personId        controllers.Dwellers.findById(personId: Int)
-GET           /dwellers/show/:personId            controllers.Dwellers.getProfileData(personId: Int)
-GET           /dwellers/listAll                   controllers.Dwellers.listAll()
-POST          /dwellers/signUp                    controllers.Dwellers.signUp()
-POST          /dwellers/signIn                    controllers.Dwellers.signIn()
+GET     /dwellers/findById/:personId        controllers.Dwellers.findById(personId: Int)
+GET     /dwellers/show/:personId            controllers.Dwellers.getProfileData(personId: Int)
+GET     /dwellers/listAll                   controllers.Dwellers.listAll()
+POST    /dwellers/signUp                    controllers.Dwellers.signUp()
+POST    /dwellers/signIn                    controllers.Dwellers.signIn()
 
 GET     /api/request/:id                    controllers.ServiceRequests.get(id: Long)
 PUT     /api/request/:id                    controllers.ServiceRequests.update(id: Long)
@@ -33,9 +33,9 @@ POST    /api/commented                      controllers.Comments.create()
 POST    /api/meters                         controllers.Meters.create()
 POST    /api/flats                          controllers.Flats.create()
 GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
-GET     /api/debt                           controllers.Billing.debts
+GET     /api/debts                          controllers.Billing.debts
 
-GET           /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+GET      /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)
 
 GET     /serviceRequests/byFlatId/:flatId   controllers.ServiceRequests.all(flatId : Int)

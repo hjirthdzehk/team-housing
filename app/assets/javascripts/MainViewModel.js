@@ -141,6 +141,16 @@ var MainViewModel = function() {
                 })
             })
         });
+
+        this.get('admin#/debts/list', function() {
+            $.get('/api/debts').then(function(debts) {
+                var viewModel = new AllDebtsViewModel(debts);
+                swapTemplate({
+                    name : 'all-debts-template',
+                    model: viewModel
+                });
+            });
+        });
     });
 
     this.run = function(startUrl) {
