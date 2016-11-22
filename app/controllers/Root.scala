@@ -11,4 +11,8 @@ class Root extends Controller {
   def login = Action {
     Ok(views.html.login())
   }
+
+  def register = Action {
+    Ok(views.html.register())
+  }
 }
