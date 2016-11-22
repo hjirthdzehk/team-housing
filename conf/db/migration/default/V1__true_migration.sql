@@ -1,6 +1,8 @@
-DROP TABLE flat CASCADE;
+CREATE DOMAIN RATING_TYPE INTEGER CHECK (VALUE >= 0 AND VALUE <= 10);
 
-CREATE TABLE IF NOT EXISTS ServiceRequest (
+CREATE DOMAIN REQUEST_STATUS_TYPE INTEGER CHECK (VALUE >= 0 AND VALUE <= 4);
+
+CREATE TABLE Service_Request (
   id SERIAL,
   rating RATING_TYPE,
   description TEXT,
@@ -9,39 +11,41 @@ CREATE TABLE IF NOT EXISTS ServiceRequest (
   PRIMARY KEY (id)
 );
 
-
-CREATE TABLE IF NOT EXISTS Building (
+CREATE TABLE Building (
   cladr_id INT,
   building_id INT,
   PRIMARY KEY (cladr_id, building_id)
 );
 
-CREATE TABLE IF NOT EXISTS Person (
+CREATE TABLE Person (
   person_id SERIAL,
   name VARCHAR,
   surname VARCHAR,
   paternal_name VARCHAR,
   registration_date DATE,
+  email VARCHAR NOT NULL DEFAULT '' UNIQUE,
+  password_hash VARCHAR NOT NULL DEFAULT '',
+  is_admin BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (person_id)
 );
 
-CREATE TABLE IF NOT EXISTS MeterUnit (
+CREATE TABLE Meter_Unit (
   meter_unit_id SERIAL,
   description VARCHAR,
   PRIMARY KEY (meter_unit_id)
 );
 
-CREATE TABLE IF NOT EXISTS Rate (
+CREATE TABLE Rate (
   rate_id SERIAL,
   value DECIMAL,
   date_from TIMESTAMP,
   date_to TIMESTAMP,
   meter_unit_id INTEGER  NOT NULL,
   PRIMARY KEY (rate_id),
-  FOREIGN KEY (meter_unit_id) REFERENCES MeterUnit (meter_unit_id)
+  FOREIGN KEY (meter_unit_id) REFERENCES Meter_Unit (meter_unit_id)
 );
 
-CREATE TABLE IF NOT EXISTS Flat (
+CREATE TABLE Flat (
   flat_id SERIAL,
   area REAL,
   flat_number INT,
@@ -52,26 +56,26 @@ CREATE TABLE IF NOT EXISTS Flat (
   FOREIGN KEY (cladr_id, building_id) REFERENCES Building(cladr_id, building_id)
 );
 
-CREATE TABLE IF NOT EXISTS RequestToFlat (
+CREATE TABLE Request_To_Flat (
   request_id INTEGER,
   flat_id INTEGER,
   PRIMARY KEY (request_id, flat_id),
-  FOREIGN KEY (request_id) REFERENCES ServiceRequest,
+  FOREIGN KEY (request_id) REFERENCES Service_Request,
   FOREIGN KEY (flat_id) REFERENCES Flat
 );
 
-CREATE TABLE IF NOT EXISTS Commented (
+CREATE TABLE Commented (
   id SERIAL,
   request_id INTEGER,
   person_id INTEGER,
   text VARCHAR,
   date DATE,
   PRIMARY KEY (id, request_id, person_id),
-  FOREIGN KEY (request_id) REFERENCES ServiceRequest,
+  FOREIGN KEY (request_id) REFERENCES Service_Request,
   FOREIGN KEY (person_id) REFERENCES Person
 );
 
-CREATE TABLE IF NOT EXISTS Visited (
+CREATE TABLE Visited (
   visit_id SERIAL,
   service_requset_id INTEGER,
   schedule_time DATE,
@@ -80,16 +84,16 @@ CREATE TABLE IF NOT EXISTS Visited (
   end_time DATE,
   costs REAL,
   PRIMARY KEY (visit_id),
-  FOREIGN KEY (service_requset_id) REFERENCES ServiceRequest
+  FOREIGN KEY (service_requset_id) REFERENCES Service_Request
 );
 
-CREATE TABLE IF NOT EXISTS Dweller (
+CREATE TABLE Dweller (
   person_id SERIAL,
   PRIMARY KEY (person_id),
   FOREIGN KEY (person_id) REFERENCES Person(person_id)
 );
 
-CREATE TABLE IF NOT EXISTS Technician (
+CREATE TABLE Technician (
   person_id INTEGER,
   rating RATING_TYPE,
   salary REAL,
@@ -97,7 +101,7 @@ CREATE TABLE IF NOT EXISTS Technician (
   FOREIGN KEY (person_id) REFERENCES Person(person_id)
 );
 
-CREATE TABLE IF NOT EXISTS Assigned (
+CREATE TABLE Assigned (
   visit_id INTEGER,
   technician_id INTEGER,
   PRIMARY KEY (visit_id, technician_id),
@@ -105,7 +109,7 @@ CREATE TABLE IF NOT EXISTS Assigned (
   FOREIGN KEY (technician_id) REFERENCES Technician (person_id)
 );
 
-CREATE TABLE IF NOT EXISTS DwellerLivesInFlat (
+CREATE TABLE Dweller_Lives_In_Flat (
   person_id INTEGER,
   flat_id INTEGER,
   PRIMARY KEY (person_id, flat_id),
@@ -113,7 +117,7 @@ CREATE TABLE IF NOT EXISTS DwellerLivesInFlat (
   FOREIGN KEY (flat_id) REFERENCES Flat(flat_id)
 );
 
-CREATE TABLE IF NOT EXISTS Meter(
+CREATE TABLE Meter(
   meter_id SERIAL,
   installation_date TIMESTAMP,
   type VARCHAR,
@@ -122,11 +126,11 @@ CREATE TABLE IF NOT EXISTS Meter(
   active BOOLEAN,
   flat_id INTEGER NOT NULL,
   PRIMARY KEY (meter_id),
-  FOREIGN KEY (meter_unit_id) REFERENCES MeterUnit (meter_unit_id),
+  FOREIGN KEY (meter_unit_id) REFERENCES Meter_Unit (meter_unit_id),
   FOREIGN KEY (flat_id) REFERENCES Flat (flat_id)
 );
 
-CREATE TABLE IF NOT EXISTS MeterReading(
+CREATE TABLE Meter_Reading(
   meter_reading_id SERIAL,
   value DECIMAL,
   date TIMESTAMP,
@@ -136,20 +140,17 @@ CREATE TABLE IF NOT EXISTS MeterReading(
   FOREIGN KEY (meter_id) REFERENCES Meter (meter_id)
 );
 
+drop table if exists company;
+create sequence company_id_seq start with 1;
+create table company (
+  id bigint not null default nextval('company_id_seq') primary key,
+  name varchar(255) not null,
+  url varchar(255),
+  created_at timestamp not null,
+  deleted_at timestamp
+);
 
-INSERT INTO meter_unit(
-  description)
-VALUES ('cbm'), ('kw-hr');
-
-INSERT INTO flat(
-  area, flat_number, balance, cladr_id, building_id)
-VALUES (153, 22, 228, 1, 1);
-
-INSERT INTO meter(installation_date, type, title, meter_unit_id, active, flat_id)
-VALUES ('01/01/2012', 'Water', 'Hot water#1 in kitchen', 1, true, 1);
-
-INSERT INTO meter(installation_date, type, title, meter_unit_id, active, flat_id)
-VALUES ('01/01/2014', 'Water', 'Cold water in kitchen', 1, true, 1);
-
-INSERT INTO meter(installation_date, type, title, meter_unit_id, active, flat_id)
-VALUES ('01/01/2012', 'Electricity', 'Electricity in hall', 2, true, 1);
+insert into company (name, url, created_at) values ('Typesafe', 'http://typesafe.com/', current_timestamp);
+insert into company (name, url, created_at) values ('Oracle', 'http://www.oracle.com/', current_timestamp);
+insert into company (name, url, created_at) values ('Google', 'http://www.google.com/', current_timestamp);
+insert into company (name, url, created_at) values ('Microsoft', 'http://www.microsoft.com/', current_timestamp);
