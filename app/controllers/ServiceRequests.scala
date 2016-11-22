@@ -21,6 +21,22 @@ case class ServiceRequestViewModel(id: Long,
                                    nextVisitDate: Option[DateTime],
                                    totalCost: Double = 0.0d)
 
+object ServiceRequestViewModel {
+    def apply(sr: ServiceRequest): ServiceRequestViewModel = new ServiceRequestViewModel(
+        id = sr.id,
+        description = sr.description,
+        rating = sr.rating,
+        status = sr.status,
+        nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
+        totalCost = Visited.getTotalCost(sr.id)
+    )
+
+    def apply(sreqs: Seq[ServiceRequest], flatNumber: Int): RequestsInfo = RequestsInfo(
+        sreqs = sreqs.map(ServiceRequestViewModel.apply),
+        flatNumber = flatNumber
+    )
+}
+
 case class RequestsInfo(sreqs: Seq[ServiceRequestViewModel],
                         flatNumber: Int)
 
@@ -80,7 +96,17 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     ))
   }
 
-  case class ServiceRequestForm(description: String,
-                                status: Int,
-                                rating: Int)
+    def allActive() = Action {
+        Ok(Extraction.decompose(
+            Flat.all().map(f =>
+                ServiceRequestViewModel(
+                    ServiceRequest.findAllActiveForFlat(f.flatId),
+                    f.flatNumber)
+            )
+        ))
+    }
+
+    case class ServiceRequestForm(description: String,
+                                  status: Int,
+                                  rating: Int)
 }

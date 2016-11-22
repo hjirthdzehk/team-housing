@@ -70,6 +70,20 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
             .map(ServiceRequest(sr)).list().apply()
     }
 
+    def findAllActiveForFlat(flatId: Long)
+                     (implicit session: DBSession = autoSession): List[ServiceRequest] = {
+        import RequestToFlat.rtf
+        sql"""
+             SELECT ${sr.result.*}
+             FROM ${ServiceRequest as sr}
+             INNER JOIN ${RequestToFlat as rtf}
+             ON ${sr.id} = ${rtf.requestId}
+             WHERE ${rtf.flatId} = ${flatId}
+             AND ${sr.status} <= 2
+           """
+            .map(ServiceRequest(sr)).list().apply()
+    }
+
 
     def findNextVisitDate(requestId: Long)
                          (implicit session: DBSession = autoSession): Option[DateTime] = {
