@@ -5,7 +5,7 @@ var UserService = function () {
         return $.post('/dwellers/signIn', {
             'email': login,
             'passwordHash': md5(pass)
-        }).then(function (personId) {
+        }).done(function (personId) {
             Cookies.set('person_id', personId, {path: "/", expires: 7});
         });
     };
