@@ -40,4 +40,8 @@ var UserService = function () {
     this.isLoginedAsUser = function() {
         return !!getCookie("personId");
     };
+
+    this.isLoginedAsAdmin = function() {
+        return !getCookie("personId");
+    };
 };

@@ -8,6 +8,10 @@ class Root extends Controller {
     Ok(views.html.index())
   }
 
+  def admin = Action {
+    Ok(views.html.admin())
+  }
+
   def login = Action {
     Ok(views.html.login())
   }
