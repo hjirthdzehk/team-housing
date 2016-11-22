@@ -79,6 +79,8 @@ var RequestViewModel = function(isEditable, requestModel, visitsModel, comments,
                 startTime: self.newStartDate,
                 endTime: self.newEndDate
             }
+        }).then(function () {
+            location.reload();
         })
     }
 };

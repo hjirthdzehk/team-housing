@@ -36,6 +36,7 @@ var ServiceRequestsAdminViewModel = function (requestsInfoList) {
                 'description':  self.newRequestDescription()
             }).then(function () {
                 self.newRequestDescription('');
+                location.reload()
             });
         }
     }

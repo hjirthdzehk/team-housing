@@ -97,11 +97,11 @@
                             <td data-bind="text: scheduledTime"></td>
                             <td data-bind="text: startTime"></td>
                             <td data-bind="text: endTime"></td>
-                            <td data-bind="text: cost"></td>
+                            <td data-bind="text: cost + '₽'"></td>
                         </tr>
                     </tbody>
                 </table>
-                <h4>Total cost: <!-- ko text: totalCost --><!-- /ko -->R</h4>
+                <h4>Total cost: <!-- ko text: totalCost --><!-- /ko -->₽</h4>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addVisitModal">
                     Add new visit
                 </button>

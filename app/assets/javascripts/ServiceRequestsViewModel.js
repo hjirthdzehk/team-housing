@@ -39,6 +39,7 @@ var ServiceRequestsViewModel = function(requestsInfo, flatId) {
                 'description':  self.newRequestDescription()
             }).then(function () {
                 self.newRequestDescription('');
+                location.reload()
             });
         }
     }

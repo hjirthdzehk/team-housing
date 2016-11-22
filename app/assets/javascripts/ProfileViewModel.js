@@ -17,6 +17,8 @@ var ProfileViewModel = function (profileData, personId) {
         $.post('/api/bindPersonToFlat', {
             'personId': self.personId,
             'flatId': self.newFlatId()
+        }).then(function () {
+            location.reload();
         })
     }
 };
