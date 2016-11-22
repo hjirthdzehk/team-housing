@@ -9,12 +9,12 @@ var CreateRequestViewModel = function(flatId) {
     self.description = ko.observable('');
 
     self.createRequest = function () {
-        // if (self.description !== '') {
+        if (self.description !== '') {
             $.post('/api/requests/create/' + this.flatId, {
                 'description'   :self.description()
             }).then(function () {
                 self.description('');
             });
-        // }
+        }
     }
 };

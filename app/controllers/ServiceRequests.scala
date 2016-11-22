@@ -31,13 +31,15 @@ object ServiceRequestViewModel {
         totalCost = Visited.getTotalCost(sr.id)
     )
 
-    def apply(sreqs: Seq[ServiceRequest], flatNumber: Int): RequestsInfo = RequestsInfo(
+    def apply(sreqs: Seq[ServiceRequest], flatId: Long, flatNumber: Int): RequestsInfo = RequestsInfo(
         sreqs = sreqs.map(ServiceRequestViewModel.apply),
+        flatId = flatId,
         flatNumber = flatNumber
     )
 }
 
 case class RequestsInfo(sreqs: Seq[ServiceRequestViewModel],
+                        flatId: Long,
                         flatNumber: Int)
 
 @Singleton
@@ -99,7 +101,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
             .map(ServiceRequestViewModel.apply)
 
         Ok(Extraction.decompose(
-            RequestsInfo(requests, flatNumber)
+            RequestsInfo(requests, flatId, flatNumber)
         ))
     }
 
@@ -108,6 +110,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
             Flat.all().map(f =>
                 ServiceRequestViewModel(
                     ServiceRequest.findAllActiveForFlat(f.flatId),
+                    f.flatId,
                     f.flatNumber)
             )
         ))
