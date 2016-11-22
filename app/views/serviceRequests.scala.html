@@ -29,7 +29,7 @@
                             <!-- ko if: status() === 4 -->Done<!-- /ko -->
                         </td>
                         <td data-bind="text: nextVisitDate"></td>
-                        <td data-bind="text: totalCost + '₽'"></td>
+                        <td data-bind="text: totalCost() + '₽'"></td>
                         <td data-bind="text: creationDate"></td>
                         <td class="form-group">
                             <label class="col-md-3 control-label" for="rating"></label>

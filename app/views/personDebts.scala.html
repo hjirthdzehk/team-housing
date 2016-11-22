@@ -17,8 +17,8 @@
                     <td data-bind="text: flatNumber"></td>
                     <td data-bind="text: meterTitle"></td>
                     <td data-bind="text: unpaidDelta + ' ' + meterUnits"></td>
-                    <td data-bind="text: rate + '₽'"></td>
-                    <td data-bind="text: debt + '₽'"></td>
+                    <td data-bind="text: rate() + '₽'"></td>
+                    <td data-bind="text: debt() + '₽'"></td>
                 </tbody>
             </table>
         </div>
