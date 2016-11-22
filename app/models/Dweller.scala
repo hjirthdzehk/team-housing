@@ -91,5 +91,4 @@ object Dweller extends SQLSyntaxSupport[Dweller] {
   def destroy(entity: Dweller)(implicit session: DBSession = autoSession): Unit = {
     sql"""delete from ${Dweller.table} where ${column.personId} = ${entity.personId}""".update.apply()
   }
-
 }

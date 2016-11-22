@@ -10,8 +10,9 @@
                         <td>Name</td>
                         <td>Surname</td>
                         <td>Paternal Name</td>
-                    <td>Email</td>
+                        <td>Email</td>
                         <td>Registration Date</td>
+                        <td>Abnormal consumption</td>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: persons">
@@ -19,9 +20,12 @@
                     <td data-bind="text: name"></td>
                     <td data-bind="text: surname"></td>
                     <td data-bind="text: paternalName"></td>
-                <td data-bind="text: email"></td>
+                    <td data-bind="text: email"></td>
                     <td>
                         <span data-bind="text: registrationDate.day"></span>-<span data-bind="text: registrationDate.month"></span>-<span data-bind="text: registrationDate.year"></span>
+                    </td>
+                    <td data-bind="foreach: abnormalConsumptions">
+                        <span class="label label-danger">consumes <!-- ko text: consumes --><!-- /ko --> <!-- ko text: meterType --><!-- /ko --> > avg is <!-- ko text: averageConsumption --><!-- /ko --></span>
                     </td>
                 </tbody>
             </table>

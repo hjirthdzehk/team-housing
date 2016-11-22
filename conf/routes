@@ -35,6 +35,7 @@ POST    /api/flats                          controllers.Flats.create()
 GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
 
 GET     /api/debts                          controllers.Billing.debts
+GET     /api/abnormal/consumers             controllers.AbnormalConsumers.get()
 
 POST    /api/requests/create/:flatId        controllers.ServiceRequests.create(flatId: Long)
 POST    /api/visited/create                 controllers.Visiteds.create()

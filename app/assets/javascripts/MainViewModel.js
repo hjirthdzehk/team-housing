@@ -107,13 +107,13 @@ var MainViewModel = function() {
         });
 
         this.get('#/allDwellers', function () {
-            $.get('/dwellers/listAll').then(function (historyGroups) {
-                var viewModel = new ListDwellersViewModel(historyGroups);
+            $.when($.get('/dwellers/listAll'), $.get('/api/abnormal/consumers')).then(function(historyGroups, abnormalConsumers){
+                var viewModel = new ListDwellersViewModel(historyGroups[0], abnormalConsumers[0]);
                 swapTemplate({
                     name: 'list-dwellers-template',
                     model: viewModel
                 })
-            })
+            });
         });
 
         this.get('#/signUp', function () {
