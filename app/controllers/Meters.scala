@@ -59,8 +59,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
   private val meterReadingForm = Form(
     mapping(
       "meterId" -> number,
-      "value" -> bigDecimal,
-      "date" -> jodaDate
+      "value" -> bigDecimal
     )(MeterReadingForm.apply)(MeterReadingForm.unapply)
   )
 
@@ -108,7 +107,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
       form => {
         MeterReading.create(
           value = form.value,
-          date = form.date,
+          date = DateTime.now(),
           paid = false,
           meterId = form.meterId)
         Ok
@@ -143,8 +142,7 @@ class Meters @Inject() (json4s: Json4s) extends Controller {
   }
 
   case class MeterReadingForm(meterId: Int,
-                              value: BigDecimal,
-                              date: DateTime)
+                              value: BigDecimal)
 
   case class MeterCreateForm(title: String,
                              `type`: String,

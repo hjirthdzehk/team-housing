@@ -16,6 +16,21 @@ var MainViewModel = function() {
     };
 
     var app = Sammy('#main', function() {
+        this.get('#/', function () {
+            if (userService.isLoginedAsUser()) {
+                $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
+                    var viewModel = new ProfileViewModel(profileData);
+                    swapTemplate({
+                        name: 'profile-template',
+                        model: viewModel
+                    })
+                });
+            } else {
+                document.location = '/login';
+            }
+        });
+
+
         this.get('#/readings/submit', function() {
             $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
                 var viewModel = new MetersViewModel(profileData, true);
@@ -25,15 +40,27 @@ var MainViewModel = function() {
                 });
             });
         });
-        this.get('#/meters', function() {
-            $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
-                var viewModel = new MetersViewModel(profileData, false);
+
+        // this.get('#/meters', function() {
+        //     $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
+        //         var viewModel = new MetersViewModel(profileData, false);
+        //         swapTemplate({
+        //             name: 'meters-template',
+        //             model: viewModel
+        //         });
+        //     });
+        // });
+
+        this.get('#/person/:personId', function () {
+            $.get('/dwellers/show/' + this.params['personId']).then(function (profileData) {
+                var viewModel = new ProfileViewModel(profileData);
                 swapTemplate({
-                    name: 'meters-template',
+                    name: 'profile-template',
                     model: viewModel
-                });
+                })
             });
         });
+
         this.get('#/meters/create', function() {
             var viewModel = new MetersCreateViewModel();
             swapTemplate({
@@ -58,8 +85,8 @@ var MainViewModel = function() {
             });
         });
 
-        this.get('#/history', function () {
-            $.get('/history/byFlatId/1').then(function (historyGroups) {
+        this.get('#/history/:flatId', function () {
+            $.get('/history/byFlatId/' + this.params['flatId']).then(function (historyGroups) {
                 var viewModel = new MeasurementsHistoryViewModel(historyGroups);
                 swapTemplate({
                     name: 'measurements-history-template',
@@ -122,8 +149,7 @@ var MainViewModel = function() {
         });
 
         this.get('#/debts', function() {
-            var personId = userService.getPersonId();
-            $.get('/api/debt').then(function (debts) {
+            $.get('/api/debt/' + userService.getPersonId()).then(function (debts) {
                 var viewModel = new PersonalDebtsViewModel(debts);
                 swapTemplate({
                     name: 'person-debts-template',

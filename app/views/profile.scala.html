@@ -1,0 +1,31 @@
+<script type="text/html" id="profile-template">
+<div class="container">
+<h1>Profile: <span data-bind='text: fullName'></span></h1>
+<h3 data-bind='text: email'></h3>
+<div class="panel-group" data-bind='foreach: flats'>
+<div class="panel panel-default">
+<div class="panel-heading">
+<h2 data-bind="text: '#' + flatNumber"></h2>
+<a class='btn btn-default' data-bind='attr: { href : "#/history/" + flatId }'>Measurements</a>
+<a class='btn btn-default' data-bind='attr: { href : "#/serviceRequests/forFlat/" + flatId }'>Requests</a>
+</div>
+<div class="panel-body">
+<table class="table">
+<thead>
+<tr>
+<th>Meter Title</th>
+<th>Meter Unit</th>
+</tr>
+</thead>
+<tbody data-bind="foreach: meters">
+<tr>
+<td data-bind="text: title"></td>
+<td data-bind="text: unit"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</script>

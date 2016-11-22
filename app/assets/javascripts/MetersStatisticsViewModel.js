@@ -3,8 +3,16 @@ var MetersStatisticsViewModel = function() {
     $.get('/meters/1').then(function(meters) {
         self.meters(meters.meterListItems);
     });
-    self.from = ko.observable('');
-    self.to = ko.observable('');
+
+    var currentDate = new Date().toJSON().slice(0, 10);
+    var oneMonthBeforeDate = function () {
+        var d = new Date();
+        d.setMonth(d.getMonth() - 1);
+        return d.toJSON().slice(0, 10);
+    }();
+
+    self.from = ko.observable(oneMonthBeforeDate);
+    self.to = ko.observable(currentDate);
     self.selectedMeter = ko.observable(self.meters()[1]);
     self.metersCostData = ko.observableArray([]);
     self.refresh = function() {

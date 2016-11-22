@@ -3,12 +3,12 @@
 var MetersViewModel = function(profileData, canInputReadings) {
     var self = this;
     self.canInputReadings = canInputReadings;
-    self.personName = ko.observable(profileData.personName);
-    self.flats = ko.observableArray(_.map(profileData.metersByFlat,
-        function (meters, flat) {
+    self.flats = ko.observableArray(_.map(profileData.flats,
+        function (flat) {
             return {
-                flatNo: ko.observable(flat),
-                meters: ko.observableArray(_.map(meters, function(meter) {
+                flatId: flat.flatId,
+                flatNumber: ko.observable('#' + flat.flatNumber),
+                meters: ko.observableArray(_.map(flat.meters, function (meter) {
                     return {
                         id: meter.id,
                         title: meter.title,
@@ -21,20 +21,21 @@ var MetersViewModel = function(profileData, canInputReadings) {
 
 
     if (canInputReadings) {
-        self.date = ko.observable('');
         self.submit = function () {
             var readings = _.chain(self.flats())
-                .map(function(flat) {
+                .map(function (flat) {
                     return flat.meters();
                 })
                 .flatten()
+                .filter(function (reading) {
+                    return reading.value() !== 0;
+                })
                 .map(function(meterReading) {
                     return {
                         meterId: meterReading.id,
-                        value: meterReading.value(),
-                        date: self.date()
+                        value: meterReading.value
                     };
-                }).value();
+                });
             readings.forEach(function(reading) {
                 $.post('/meterReadings', reading)
             });

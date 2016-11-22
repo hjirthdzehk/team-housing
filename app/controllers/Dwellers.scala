@@ -11,6 +11,7 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Action, Controller, Cookie}
 import scalikejdbc._
+import utils.Grouper
 
 case class MeterReadingData(date: String,
                             value: String)
@@ -33,8 +34,26 @@ object MeterData {
     )
 }
 
-case class ProfileData(personName: String,
-                       metersByFlat: Map[String, Seq[MeterData]])
+case class FlatData(flatId: Int,
+                    flatNumber: String,
+                    meters: Seq[MeterData])
+
+object FlatData {
+  def fromMap(map: Map[Flat, Seq[Meter]]): Seq[FlatData] = map.map {
+    case (flat, meters) =>
+      FlatData(
+        flatId = flat.flatId,
+        flatNumber = flat.flatNumber.toString,
+        meters = meters.map(MeterData.fromMeter)
+      )
+  }.toSeq
+}
+
+case class ProfileData(name: String,
+                       surname: String,
+                       paternalName: String,
+                       email: String,
+                       flats: Seq[FlatData])
 
 case class SignUpForm(name: String,
                       surname: String,
@@ -115,7 +134,7 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
       val dwellers =
         sql"""
              select ${p.result.*} from ${Dweller as d}
-             natural join ${Person as p}
+               natural join ${Person as p}
         """.map(Person(p.resultName)).list().apply()
 
       Ok(Extraction.decompose(dwellers))
@@ -123,30 +142,30 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
 
   def getProfileData(personId: Int)(implicit session: DBSession = autoSession) = Action {
     val (d, p, f, m, df) = (Dweller.d, Person.p, Flat.f, Meter.m, DwellerLivesInFlat.df)
-    val query =
-      sql"""
-          select ${d.result.*}, ${p.result.*}, ${f.result.*}, ${m.result.*}
-          from ${Dweller as d} natural join ${Person as p}
+
+    Person.find(personId).map {
+      case Person(_, name, surname, paternalName, _, email, _) =>
+        val query =
+          sql"""
+          select ${d.result.*}, ${f.result.*}, ${m.result.*}
+          from ${Dweller as d}
             natural join ${DwellerLivesInFlat as df}
             natural join ${Flat as f}
             natural join ${Meter as m}
           where ${d.personId} = ${personId}
-       """.map(rs => {
-      (Person(p)(rs), Flat(f)(rs), Meter(m)(rs))
-    }).list().apply()
+          """.map(rs => {
+            (Flat(f)(rs), Meter(m)(rs))
+          }).list().apply()
+        val flats = FlatData.fromMap(Grouper.groupToMap(query))
 
-    Ok(Extraction.decompose(
-      query.groupBy(_._1)
-        .map{ case (person, tail) => {
+        Ok(Extraction.decompose(
           ProfileData(
-            s"${person.name} ${person.surname}",
-            tail.groupBy(_._2)
-              .map{ case (flat, tail) =>
-                flat.flatNumber.toString ->
-                  tail.filter(_._2 == flat).map(_._3).map(MeterData.fromMeter)
-              }
-          )
-        }}.head))
+            name = name,
+            surname = surname,
+            paternalName = paternalName,
+            email = email,
+            flats = flats
+          )))
+    }.getOrElse(NotFound)
   }
-
 }

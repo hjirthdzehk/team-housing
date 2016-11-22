@@ -1,19 +1,9 @@
 <script type="text/html" id="meters-template">
 <div class="container">
-    <h1 data-bind="text: personName"></h1>
-    <div class="form-group" data-bind="if: canInputReadings">
-        <label for="date">Date</label>
-        <div class="input-group date">
-            <input type="text" class="form-control" id="date" data-bind="datepicker: {},value:date">
-            <div class="input-group-addon">
-                <span class="glyphicon glyphicon-th"></span>
-            </div>
-        </div>
-    </div>
     <!-- ko foreach: flats -->
     <div class="panel panel-primary">
         <div class="panel-heading">
-            <h2 data-bind="text: flatNo"></h2>
+        <h2 data-bind="text: flatNumber"></h2>
         </div>
         <div class="panel-body">
             <table class="table">
