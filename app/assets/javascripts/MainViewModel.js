@@ -70,18 +70,21 @@ var MainViewModel = function() {
         });
 
         this.get('#/flats/create', function() {
-                    var viewModel = new FlatsCreateViewModel();
-                    swapTemplate({
-                        name:'flats-create-template',
-                        model: viewModel
-                    });
-                });
-
-        this.get('#/meters/statistics', function() {
-            var viewModel = new MetersStatisticsViewModel();
+            var viewModel = new FlatsCreateViewModel();
             swapTemplate({
-                name:'meters-statistic-template',
+                name:'flats-create-template',
                 model: viewModel
+            });
+        });
+
+        this.get('#/meters/statistics', function () {
+            var userId = userService.getPersonId();
+            $.get('/dwellers/show/' + userId).then(function (profileData) {
+                var viewModel = new MetersStatisticsViewModel(profileData);
+                swapTemplate({
+                    name: 'meters-statistic-template',
+                    model: viewModel
+                });
             });
         });
 
