@@ -28,8 +28,11 @@ var UserService = function () {
             'email': login,
             'passwordHash': md5(pass)
         }).then(function(personId) {
-            setCookie("personId", personId);
-            return $.Deferred().resolve(personId).promise();
+            return $.get('/dwellers/isAdmin/' + personId).then(function(isAdmin) {
+                setCookie("personId", personId);
+                setCookie("isAdmin", isAdmin);
+                return $.Deferred().resolve(personId).promise();
+            });
         });
     };
 
@@ -37,15 +40,11 @@ var UserService = function () {
         return getCookie("personId");
     };
 
-    this.isLoginedAsUser = function() {
+    this.isLogined = function() {
         return !!getCookie("personId");
     };
 
-    this.isLoginedAsAdmin = function() {
-        return !getCookie("personId");
-    };
-
     this.isAdmin = function () {
-        return !!$.get('/dwellers/isAdmin/' + this.getPersonId());
+        return getCookie("isAdmin");
     }
 };

@@ -4,10 +4,6 @@ var MainViewModel = function() {
 
     this.template = ko.observable({});
     var swapTemplate = function(template) {
-        if (!userService.isLoginedAsUser()) {
-            document.location = '/login';
-        }
-
         if (self.template().model && _.isFunction(self.template().model.dispose)) {
             self.template().model.dispose();
         }
@@ -16,7 +12,7 @@ var MainViewModel = function() {
     };
     var app = Sammy('#main', function() {
         this.before({except: []}, function() {
-            if (!userService.isLoginedAsUser()) {
+            if (!userService.isLogined()) {
                 document.location = '/login';
             }
         });
