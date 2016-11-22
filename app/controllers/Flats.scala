@@ -28,6 +28,9 @@ class Flats @Inject() (json4j: Json4s) extends Controller {
                             cladrId: Int,
                             buildingId: Int)
 
+  case class FlatPersonBindForm(personId: Long,
+                                flatId: Long)
+
   val flatCreateForm = Form(
     mapping(
       "area" -> bigDecimal,
@@ -36,6 +39,13 @@ class Flats @Inject() (json4j: Json4s) extends Controller {
       "cladrId" -> number,
       "buildingId" -> number
     )(FlatCreateForm.apply)(FlatCreateForm.unapply)
+  )
+
+  val flatPersonBindForm = Form(
+    mapping(
+      "personId" -> longNumber,
+      "flatId" -> longNumber
+    )(FlatPersonBindForm.apply)(FlatPersonBindForm.unapply)
   )
 
   def create() =
@@ -56,4 +66,20 @@ class Flats @Inject() (json4j: Json4s) extends Controller {
           }
         )
     }
+
+  def bindFlatToPerson() = {
+    Action {
+      implicit req =>
+        flatPersonBindForm.bindFromRequest.fold(
+          formWithErrors => BadRequest("Something bad happened during Flat binding"),
+          form => {
+            DwellerLivesInFlat.create(
+              form.flatId,
+              form.personId
+            )
+            Ok
+          }
+        )
+    }
+  }
 }

@@ -23,7 +23,8 @@ var MainViewModel = function() {
 
         this.get('#/', function () {
             $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
-                var viewModel = new ProfileViewModel(profileData);
+                var personId = userService.getPersonId();
+                var viewModel = new ProfileViewModel(profileData, personId);
                 swapTemplate({
                     name: 'profile-template',
                     model: viewModel

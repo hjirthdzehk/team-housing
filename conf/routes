@@ -34,6 +34,7 @@ POST          /api/commented                      controllers.Comments.create()
 POST          /api/meters                         controllers.Meters.create()
 POST          /api/flats                          controllers.Flats.create()
 GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
+POST    /api/bindPersonToFlat               controllers.Flats.bindFlatToPerson()
 
 GET     /api/debts                          controllers.Billing.debts
 GET     /api/abnormal/consumers             controllers.AbnormalConsumers.get()
