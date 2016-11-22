@@ -55,5 +55,5 @@ sandbox/db
 project/project/
 
 # Configs are personal for each developer
-/conf/application.conf
+conf/application.conf
 project/scalikejdbc.properties

@@ -96,25 +96,6 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
     ))
   }
 
-    def all(flatId: Int) = Action {
-        val flatNumber = Flat.findById(flatId)
-            .map(f => f.flatNumber).getOrElse(-1)
-
-        val requests = ServiceRequest.findAllForFlat(flatId)
-        var serviceReqs = Seq[ServiceRequestViewModel]()
-        requests.foreach(sr => serviceReqs = serviceReqs :+ ServiceRequestViewModel(
-            id = sr.id,
-            description = sr.description,
-            rating = sr.rating,
-            status = sr.status,
-            nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
-            totalCost = Visited.getTotalCost(sr.id)))
-
-        Ok(Extraction.decompose(
-            RequestsInfo(serviceReqs, flatNumber)
-        ))
-    }
-
     def allActive() = Action {
         Ok(Extraction.decompose(
             Flat.all().map(f =>
