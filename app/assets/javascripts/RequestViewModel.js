@@ -19,7 +19,7 @@ var RequestViewModel = function(isEditable, requestModel, visitsModel, comments,
         var debounceTimeout = 500;
         var requestModelSubscription = self.requestModel.subscribe(_.debounce(function(updatedModel) {
             $.ajax({
-                url: '/api/request/1',
+                url: '/api/request/' + requestModel.id,
                 type: 'PUT',
                 data: updatedModel
             });

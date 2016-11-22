@@ -33,9 +33,12 @@ POST    /api/commented                      controllers.Comments.create()
 POST    /api/meters                         controllers.Meters.create()
 POST    /api/flats                          controllers.Flats.create()
 GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
+
 GET     /api/debts                          controllers.Billing.debts
 
-GET      /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
+POST    /api/requests/create/:flatId        controllers.ServiceRequests.create(flatId: Long)
+
 GET     /history/byFlatId/:flatId           controllers.History.getMetersHistory(flatId: Int)
 
 GET     /serviceRequests/byFlatId/:flatId   controllers.ServiceRequests.all(flatId : Int)

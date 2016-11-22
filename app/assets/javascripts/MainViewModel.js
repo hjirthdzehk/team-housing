@@ -31,8 +31,8 @@ var MainViewModel = function() {
         });
 
 
-        this.get('#/readings/submit', function() {
-            $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
+        this.get('#/readings/submit', function () {
+            $.get('/dwellers/show/' + userService.getPersonId()).then(function (profileData) {
                 var viewModel = new MetersViewModel(profileData, true);
                 swapTemplate({
                     name: 'meters-template',
@@ -61,26 +61,26 @@ var MainViewModel = function() {
             });
         });
 
-        this.get('#/meters/create', function() {
+        this.get('#/meters/create', function () {
             var viewModel = new MetersCreateViewModel();
             swapTemplate({
-                name:'meters-create-template',
+                name: 'meters-create-template',
                 model: viewModel
             });
         });
 
-        this.get('#/flats/create', function() {
-                    var viewModel = new FlatsCreateViewModel();
-                    swapTemplate({
-                        name:'flats-create-template',
-                        model: viewModel
-                    });
-                });
+        this.get('#/flats/create', function () {
+            var viewModel = new FlatsCreateViewModel();
+            swapTemplate({
+                name: 'flats-create-template',
+                model: viewModel
+            });
+        });
 
-        this.get('#/meters/statistics', function() {
+        this.get('#/meters/statistics', function () {
             var viewModel = new MetersStatisticsViewModel();
             swapTemplate({
-                name:'meters-statistic-template',
+                name: 'meters-statistic-template',
                 model: viewModel
             });
         });
@@ -112,7 +112,7 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
-        
+
         this.get('#/signIn', function () {
             var viewModel = new SignInViewModel();
             swapTemplate({
@@ -121,7 +121,7 @@ var MainViewModel = function() {
             });
         });
 
-        this.get('#/serviceRequests/getInfo/:requestId', function() {
+        this.get('#/serviceRequests/getInfo/:requestId', function () {
             var requestId = this.params['requestId'];
             var isEditable = true; //check if logined user is admin
             var personId = 1;
@@ -137,9 +137,9 @@ var MainViewModel = function() {
                 })
         });
 
-        this.get('#/serviceRequests/forFlat/:flatId', function() {
+        this.get('#/serviceRequests/forFlat/:flatId', function () {
             var flatId = this.params['flatId'];
-            $.get('/serviceRequests/byFlatId/'+ flatId).then(function (requestsInfo) {
+            $.get('/serviceRequests/byFlatId/' + flatId).then(function (requestsInfo) {
                 var viewModel = new ServiceRequestsViewModel(requestsInfo);
                 swapTemplate({
                     name: 'service-requests-template',
@@ -148,7 +148,7 @@ var MainViewModel = function() {
             })
         });
 
-        this.get('#/debts', function() {
+        this.get('#/debts', function () {
             $.get('/api/debt/' + userService.getPersonId()).then(function (debts) {
                 var viewModel = new PersonalDebtsViewModel(debts);
                 swapTemplate({
@@ -158,7 +158,7 @@ var MainViewModel = function() {
             })
         });
 
-        this.get('#/serviceRequests/allActive', function() {
+        this.get('#/serviceRequests/allActive', function () {
             $.get('/serviceRequests/allActive').then(function (requestsInfoList) {
                 var viewModel = new ServiceRequestsAdminViewModel(requestsInfoList);
                 swapTemplate({
@@ -168,24 +168,33 @@ var MainViewModel = function() {
             })
         });
 
-        this.get('admin#/debts/list', function() {
-            $.get('/api/debts').then(function(debts) {
+        this.get('admin#/debts/list', function () {
+            $.get('/api/debts').then(function (debts) {
                 var viewModel = new AllDebtsViewModel(debts);
                 swapTemplate({
-                    name : 'all-debts-template',
+                    name: 'all-debts-template',
                     model: viewModel
                 });
             });
         });
-    });
 
-    this.run = function(startUrl) {
-        app.run(startUrl);
-    };
-    $(".nav a").on("click", function(){
-        $(".nav").find(".active").removeClass("active");
-        $(this).parent().addClass("active");
-    });
+        this.get('#/serviceRequests/create/:flatId', function () {
+            var flatId = this.params['flatId'];
+            var viewModel = new CreateRequestViewModel(flatId);
+            swapTemplate({
+                name: 'request-create-template',
+                model: viewModel
+            });
+        });
 
-    ko.applyBindings(self, $('#main')[0]);
+        this.run = function (startUrl) {
+            app.run(startUrl);
+        };
+        $(".nav a").on("click", function () {
+            $(".nav").find(".active").removeClass("active");
+            $(this).parent().addClass("active");
+        });
+
+        ko.applyBindings(self, $('#main')[0]);
+    });
 };
