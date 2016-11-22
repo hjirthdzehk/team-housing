@@ -9,7 +9,8 @@ case class Person(personId: Int,
                   paternalName: String,
                   registrationDate: LocalDate = LocalDate.now(),
                   email: String,
-                  passwordHash: String) {
+                  passwordHash: String,
+                  isAdmin: Boolean) {
 
   def findDweller = Dweller.find(personId)
 
@@ -33,6 +34,17 @@ object Person extends SQLSyntaxSupport[Person] {
       .map(Person(p.resultName)).single.apply()
   }
 
+  def apply(p: ResultName[Person])(rs: WrappedResultSet): Person = new Person(
+    personId = rs.get(p.personId),
+    name = rs.get(p.name),
+    surname = rs.get(p.surname),
+    paternalName = rs.get(p.paternalName),
+    registrationDate = rs.get(p.registrationDate),
+    email = rs.get(p.email),
+    passwordHash = rs.get(p.passwordHash),
+    isAdmin = rs.get(p.isAdmin)
+  )
+
   def findAll()(implicit session: DBSession = autoSession): List[Person] = {
     sql"""select ${p.result.*} from ${Person as p}""".map(Person(p.resultName)).list.apply()
   }
@@ -51,27 +63,17 @@ object Person extends SQLSyntaxSupport[Person] {
       .map(Person(p.resultName)).list.apply()
   }
 
-  def apply(p: ResultName[Person])(rs: WrappedResultSet): Person = new Person(
-    personId = rs.get(p.personId),
-    name = rs.get(p.name),
-    surname = rs.get(p.surname),
-    paternalName = rs.get(p.paternalName),
-    registrationDate = rs.get(p.registrationDate),
-    email = rs.get(p.email),
-    passwordHash = rs.get(p.passwordHash)
-  )
-
   def countBy(where: SQLSyntax)(implicit session: DBSession = autoSession): Long = {
     sql"""select count(1) from ${Person as p} where ${where}"""
       .map(_.long(1)).single.apply().get
   }
 
-  def create(
-              name: String,
-              surname: String,
-              paternalName: String,
-              email: String,
-              passwordHash: String)(implicit session: DBSession = autoSession): Person = {
+  def create(name: String,
+             surname: String,
+             paternalName: String,
+             email: String,
+             passwordHash: String,
+             isAdmin: Boolean = false)(implicit session: DBSession = autoSession): Person = {
     val registrationDate = LocalDate.now()
     val generatedKey = sql"""
       INSERT INTO ${Person.table} (
@@ -98,7 +100,8 @@ object Person extends SQLSyntaxSupport[Person] {
       paternalName = paternalName,
       registrationDate = registrationDate,
       email = email,
-      passwordHash = passwordHash
+      passwordHash = passwordHash,
+      isAdmin = isAdmin
     )
   }
 
@@ -134,7 +137,8 @@ object Person extends SQLSyntaxSupport[Person] {
         ${column.paternalName} = ${entity.paternalName},
         ${column.registrationDate} = ${entity.registrationDate},
         ${column.email} = ${entity.email},
-        ${column.passwordHash} = ${entity.passwordHash}
+        ${column.passwordHash} = ${entity.passwordHash},
+        ${column.isAdmin} = ${entity.isAdmin}
       WHERE
         ${column.personId} = ${entity.personId}
       """.update.apply()

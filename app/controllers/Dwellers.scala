@@ -53,6 +53,7 @@ case class ProfileData(name: String,
                        surname: String,
                        paternalName: String,
                        email: String,
+                       isAdmin: Boolean,
                        flats: Seq[FlatData])
 
 case class SignUpForm(name: String,
@@ -91,6 +92,10 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
       .map(Extraction.decompose)
       .map(Ok(_))
       .getOrElse(NotFound)
+  }
+
+  def isAdmin(personId: Int) = Action {
+    Ok(Person.find(personId).exists(_.isAdmin).toString)
   }
 
   def signUp() =
@@ -144,7 +149,7 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
     val (d, p, f, m, df) = (Dweller.d, Person.p, Flat.f, Meter.m, DwellerLivesInFlat.df)
 
     Person.find(personId).map {
-      case Person(_, name, surname, paternalName, _, email, _) =>
+      case Person(_, name, surname, paternalName, _, email, _, isAdmin) =>
         val query =
           sql"""
           select ${d.result.*}, ${f.result.*}, ${m.result.*}
@@ -164,6 +169,7 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
             surname = surname,
             paternalName = paternalName,
             email = email,
+            isAdmin = isAdmin,
             flats = flats
           )))
     }.getOrElse(NotFound)
