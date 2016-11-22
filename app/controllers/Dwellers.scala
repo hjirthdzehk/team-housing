@@ -88,7 +88,6 @@ class Dwellers @Inject() (json4j: Json4s) extends Controller {
           Dweller.create(person.personId) // TODO deffer making person a dweller
 
           Ok(s"${person.personId}")
-            .withCookies(Cookie("person_id", person.personId.toString))
         }
       )
     }

@@ -36,8 +36,6 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ListDwellersViewModel.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/SignUpViewModel.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/SignInViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ServiceRequestsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/RequestViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/PersonalDebtsViewModel.js")"></script>
@@ -56,8 +54,6 @@
                 <li role="presentation"><a href="#/meters/statistics">Statistics</a></li>
                 <li role="presentation"><a href="#/history">Measures History</a></li>
                 <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
-                <li role="presentation"><a href="#/signUp">Sign Up</a></li>
-                <li role="presentation"><a href="#/signIn">Sign In</a></li>
                 <li role="presentation"><a href="#/serviceRequests">Service Requests</a></li>
                 <li role="presentation"><a href="#/meters/create">Create meters!</a></li>
                 <li role="presentation"><a href="#/flats/create">Create flats!</a></li>
@@ -72,15 +68,13 @@
     @metersStatistic()
     @measurementsHistory()
     @listDwellers()
-    @signUp()
     @serviceRequests()
     @request()
     @flatsCreate()
     @personDebts()
-    @signIn()
 
     <script type="text/javascript">
-        new MainViewModel().run('#/measuresInput');
+        new MainViewModel().run('#/meters');
     </script>
 </body>
 </html>

@@ -2,6 +2,8 @@
 # ~~~~
 
 GET     /                                   controllers.Root.index
+GET     /login                              controllers.Root.login
+GET     /register                           controllers.Root.register
 
 GET     /companies                          controllers.Companies.all
 GET     /companies/:id                      controllers.Companies.show(id: Long)

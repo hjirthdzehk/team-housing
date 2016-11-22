@@ -4,6 +4,10 @@ var MainViewModel = function() {
 
     this.template = ko.observable({});
     var swapTemplate = function(template) {
+        if (!userService.isLoginedAsUser()) {
+            document.location = '/login';
+        }
+
         if (self.template().model && _.isFunction(self.template().model.dispose)) {
             self.template().model.dispose();
         }
@@ -11,22 +15,25 @@ var MainViewModel = function() {
         self.template(template);
     };
 
-    var showUserProfile = function () {
-        $.get('/dwellers/show/' + userService.getPersonId())
-            .then(function (profileData) {
+    var app = Sammy('#main', function() {
+        this.get('#/readings/submit', function() {
+            $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
                 var viewModel = new MetersViewModel(profileData, true);
                 swapTemplate({
                     name: 'meters-template',
                     model: viewModel
                 });
             });
-    };
-
-    var app = Sammy('#main', function() {
-        this.get('#/readings/submit', showUserProfile);
-
-        this.get('#/meters', showUserProfile);
-
+        });
+        this.get('#/meters', function() {
+            $.get('/dwellers/show/' + userService.getPersonId()).then(function(profileData) {
+                var viewModel = new MetersViewModel(profileData, false);
+                swapTemplate({
+                    name: 'meters-template',
+                    model: viewModel
+                });
+            });
+        });
         this.get('#/meters/create', function() {
             var viewModel = new MetersCreateViewModel();
             swapTemplate({

@@ -2,6 +2,7 @@
 
 var SignUpViewModel = function() {
     var self = this;
+    var userService = new UserService();
 
     self.name = ko.observable('');
     self.surname = ko.observable('');
@@ -16,8 +17,10 @@ var SignUpViewModel = function() {
             'paternalName': self.paternalName(),
             'email': self.email(),
             'passwordHash': md5(self.password())
-        }).then(function (personId) {
-            window.location = '#/dwellers/show/' + personId;
+        }).then(function () {
+            userService.login(self.email(), self.password()).then(function() {
+                window.location = '/';
+            });
         });
     }
 };
