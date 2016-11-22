@@ -11,8 +11,35 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc.{Action, Controller}
 
-case class VisitedViewModel(totalCost: Double,
-                            visits: List[Visited])
+case class VisitedViewModel(visitId: Long,
+                            serviceRequsetId: Long,
+                            scheduleTime: DateTime,
+                            outTime: DateTime,
+                            startTime: DateTime,
+                            endTime: DateTime,
+                            costs: Float)
+
+object VisitedViewModel {
+  def apply(v: Visited): VisitedViewModel = new VisitedViewModel(
+    visitId = v.visitId,
+    serviceRequsetId = v.serviceRequsetId,
+    scheduleTime = v.scheduleTime,
+    outTime = v.outTime.orNull,
+    startTime = v.startTime.orNull,
+    endTime = v.endTime.orNull,
+    costs = v.costs
+  )
+}
+
+case class VisitedListViewModel(visits: List[VisitedViewModel],
+                                totalCost: Double)
+
+object VisitedListViewModel {
+  def apply(totalCost: Double, visits: List[Visited]) = new VisitedListViewModel(
+    totalCost = totalCost,
+    visits = visits.map(VisitedViewModel.apply)
+  )
+}
 
 class Visiteds @Inject()(json4s: Json4s) extends Controller {
 
@@ -22,12 +49,16 @@ class Visiteds @Inject()(json4s: Json4s) extends Controller {
 
   case class VisitCreationForm(requestId: Long,
                                scheduleTime: DateTime,
+                               startTime: DateTime,
+                               endTime: DateTime,
                                costs: BigDecimal)
 
   private val visitCreateForm = Form(
     mapping(
       "requestId" -> longNumber,
       "scheduleTime" -> jodaDate,
+      "startTime" -> jodaDate,
+      "endTime" -> jodaDate,
       "costs" -> bigDecimal
     )(VisitCreationForm.apply)(VisitCreationForm.unapply)
   )
@@ -35,19 +66,21 @@ class Visiteds @Inject()(json4s: Json4s) extends Controller {
   def all(requestId: Long) = Action {
     val visits = Visited.findAll(requestId)
     val totalCost = Visited.getTotalCost(requestId)
-    Ok(Extraction.decompose(VisitedViewModel(totalCost, visits)))
+    Ok(Extraction.decompose(VisitedListViewModel(totalCost, visits)))
   }
 
-  def create() = Action {
+  def create() = Action { implicit req =>
     visitCreateForm.bindFromRequest().fold(
       formWithErrors => BadRequest(
         formWithErrors.errors
             .foldLeft("")((res, message) =>
               res + message.message + ",")),
       form => {
-        Visited.create(form.requestId, form.costs.toFloat, form.scheduleTime)
+        Visited.create(form.requestId, form.costs.toFloat,
+          form.scheduleTime, startTime = Some(form.startTime),
+          endTime = Some(form.endTime))
+        Ok
       }
     )
-    Ok
   }
 }

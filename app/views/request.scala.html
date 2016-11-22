@@ -102,6 +102,9 @@
                     </tbody>
                 </table>
                 <h4>Total cost: <!-- ko text: totalCost --><!-- /ko -->R</h4>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addVisitModal">
+                    Add new visit
+                </button>
             </div>
         </div>
         <div class="panel panel-primary">
@@ -146,6 +149,68 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: addNewComment">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addVisitModal" tabindex="-1" role="dialog" aria-labelledby="addVisitLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="addVisitLabel">Add new visit</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="costs">Costs</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </div>
+                    <textarea id="newVisitCosts"
+                        class="form-control"
+                        rows="1"
+                        data-bind="value: newVisitCosts"/>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="visitDate">Visit date</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group date">
+                        <input type="text" class="form-control" id="date" data-bind="datepicker: {}, value:newVisitDate">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="startDate">Start date</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group date">
+                        <input type="text" class="form-control" id="date" data-bind="datepicker: {}, value:newStartDate">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="endDate">End date</label>
+                    <div class="col-md-10 input-group">
+                        <div class="input-group date">
+                        <input type="text" class="form-control" id="date" data-bind="datepicker: {}, value:newEndDate">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: addNewVisit">Save changes</button>
             </div>
         </div>
     </div>

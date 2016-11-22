@@ -18,7 +18,7 @@ case class ServiceRequestViewModel(id: Long,
                                    description: String,
                                    rating: Option[Int],
                                    status: Option[Int],
-                                   nextVisitDate: Option[DateTime],
+                                   nextVisitDate: DateTime,
                                    totalCost: Double = 0.0d)
 
 object ServiceRequestViewModel {
@@ -27,7 +27,7 @@ object ServiceRequestViewModel {
         description = sr.description,
         rating = sr.rating,
         status = sr.status,
-        nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
+        nextVisitDate = ServiceRequest.findNextVisitDate(sr.id).orNull,
         totalCost = Visited.getTotalCost(sr.id)
     )
 
@@ -62,13 +62,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
 
     def get(requestId: Long) = Action {
         val serviceRequest = ServiceRequest.get(requestId)
-        val nextVisitDate = ServiceRequest.findNextVisitDate(requestId)
-        Ok(Extraction.decompose(ServiceRequestViewModel(
-            id = serviceRequest.id,
-            description = serviceRequest.description,
-            rating = serviceRequest.rating,
-            status = serviceRequest.status,
-            nextVisitDate = nextVisitDate)))
+        Ok(Extraction.decompose(ServiceRequestViewModel(serviceRequest)))
     }
 
     def create(flatId: Long) = Action { implicit req =>
@@ -102,13 +96,7 @@ class ServiceRequests @Inject()(json4s: Json4s) extends Controller {
             .map(f => f.flatNumber).getOrElse(-1)
 
         val requests = ServiceRequest.findAllForFlat(flatId)
-            .map(sr => ServiceRequestViewModel(
-                id = sr.id,
-                description = sr.description,
-                rating = sr.rating,
-                status = sr.status,
-                nextVisitDate = ServiceRequest.findNextVisitDate(sr.id),
-                totalCost = Visited.getTotalCost(sr.id)))
+            .map(ServiceRequestViewModel.apply)
 
         Ok(Extraction.decompose(
             RequestsInfo(requests, flatNumber)

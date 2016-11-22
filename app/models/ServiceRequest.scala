@@ -94,10 +94,10 @@ object ServiceRequest extends SQLSyntaxSupport[ServiceRequest] {
            FROM ${Visited as v}
            INNER JOIN ${ServiceRequest as sr}
            ON ${v.serviceRequsetId} = ${sr.id}
-           WHERE ${sr.id} = ${requestId} AND ${sr.status} = 1
-           ORDER BY ${v.scheduleTime} DESC
+           WHERE ${sr.id} = ${requestId}
+           ORDER BY ${v.scheduleTime} ASC
            LIMIT 1
            """
-            .map(rs => rs.jodaDateTime(v.resultName.scheduleTime)).single().apply()
+            .map(rs => rs.jodaDateTime(1)).single().apply()
     }
 }
