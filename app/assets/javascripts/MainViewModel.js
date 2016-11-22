@@ -151,7 +151,7 @@ var MainViewModel = function() {
         this.get('#/serviceRequests/forFlat/:flatId', function () {
             var flatId = this.params['flatId'];
             $.get('/serviceRequests/byFlatId/' + flatId).then(function (requestsInfo) {
-                var viewModel = new ServiceRequestsViewModel(requestsInfo);
+                var viewModel = new ServiceRequestsViewModel(requestsInfo, flatId);
                 swapTemplate({
                     name: 'service-requests-template',
                     model: viewModel

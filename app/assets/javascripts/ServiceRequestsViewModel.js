@@ -2,8 +2,11 @@
  * Created by VladVin on 17.11.2016.
  */
 
-var ServiceRequestsViewModel = function(requestsInfo) {
+var ServiceRequestsViewModel = function(requestsInfo, flatId) {
     var self = this;
+
+    self.flatId = flatId;
+    self.newRequestDescription = ko.observable('');
 
     self.flatNumber = requestsInfo.flatNumber >=0 ?
             requestsInfo.flatNumber :
@@ -29,4 +32,14 @@ var ServiceRequestsViewModel = function(requestsInfo) {
             }
         )
     );
+
+    self.createRequest = function () {
+        if (self.newRequestDescription() !== '') {
+            $.post('/api/requests/create/' + self.flatId, {
+                'description':  self.newRequestDescription()
+            }).then(function () {
+                self.newRequestDescription('');
+            });
+        }
+    }
 };
