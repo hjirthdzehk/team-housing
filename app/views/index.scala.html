@@ -31,8 +31,6 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MainViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ko-binding-handlers.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersViewModel.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersCreateViewModel.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/FlatsCreateViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersStatisticsViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MeasurementsHistoryViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ListDwellersViewModel.js")"></script>
@@ -55,9 +53,6 @@
                 <li role="presentation"><a href="#/history">Measures History</a></li>
                 <li role="presentation"><a href="#/allDwellers">All Dwellers</a></li>
                 <li role="presentation"><a href="#/serviceRequests/forFlat/1">Service Requests</a></li>
-
-                <li role="presentation"><a href="#/meters/create">Create meters!</a></li>
-                <li role="presentation"><a href="#/flats/create">Create flats!</a></li>
             </ul>
         </div>
     </nav>
@@ -65,13 +60,12 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @meters()
-    @metersCreate()
+
     @metersStatistic()
     @measurementsHistory()
     @listDwellers()
     @serviceRequests()
     @request()
-    @flatsCreate()
     @personDebts()
 
     <script type="text/javascript">

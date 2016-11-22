@@ -31,6 +31,8 @@
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MainViewModel.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ko-binding-handlers.js")"></script>
     <script type="text/javascript" src="@routes.Assets.versioned("javascripts/ServiceRequestsAdminViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/MetersCreateViewModel.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("javascripts/FlatsCreateViewModel.js")"></script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -41,6 +43,8 @@
 
             <ul class="nav navbar-nav">
                 <li role="presentation"><a href="#/serviceRequests/allActive">Service Requests</a></li>
+                <li role="presentation"><a href="#/meters/create">Add meters</a></li>
+                <li role="presentation"><a href="#/flats/create">Add flats</a></li>
             </ul>
         </div>
     </nav>
@@ -48,6 +52,9 @@
     <div id="main" data-bind="template: { name: template().name, data: template().model }"></div>
 
     @serviceRequestsAdmin()
+    @metersCreate()
+    @flatsCreate()
+
     <script type="text/javascript">
         new MainViewModel().run('#/serviceRequests/allActive');
     </script>
