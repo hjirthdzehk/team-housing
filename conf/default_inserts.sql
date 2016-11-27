@@ -52,3 +52,16 @@ values (1, 228, '2016-10-02', '2016-11-30', 1);
 insert into rate (rate_id, value, date_from, date_to, meter_unit_id)
 values (2, 42, '2016-10-02', '2016-11-30', 2);
 
+-- Rates
+
+insert into rate (value, date_from, date_to, meter_unit_id) values(192, '2012-01-01', '2012-02-01', 1);
+insert into rate (value, date_from, date_to, meter_unit_id) values(216, '2012-02-01', '2012-03-01', 1);
+insert into rate (value, date_from, date_to, meter_unit_id) values(321, '2012-03-01', '2012-04-01', 1);
+insert into rate (value, date_from, date_to, meter_unit_id) values(223, '2012-04-01', '2012-05-01', 1);
+insert into rate (value, date_from, date_to, meter_unit_id) values(167, '2012-05-01', '2012-06-01', 1);
+
+insert into rate (value, date_from, date_to, meter_unit_id) values(45, '2012-01-01', '2012-02-01', 2);
+insert into rate (value, date_from, date_to, meter_unit_id) values(72, '2012-02-01', '2012-03-01', 2);
+insert into rate (value, date_from, date_to, meter_unit_id) values(105, '2012-03-01', '2012-04-01', 2);
+insert into rate (value, date_from, date_to, meter_unit_id) values(68, '2012-04-01', '2012-05-01', 2);
+insert into rate (value, date_from, date_to, meter_unit_id) values(31, '2012-05-01', '2012-06-01', 2);

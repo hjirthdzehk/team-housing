@@ -140,17 +140,6 @@ CREATE TABLE Meter_Reading(
   FOREIGN KEY (meter_id) REFERENCES Meter (meter_id)
 );
 
-drop table if exists company;
-create sequence company_id_seq start with 1;
-create table company (
-  id bigint not null default nextval('company_id_seq') primary key,
-  name varchar(255) not null,
-  url varchar(255),
-  created_at timestamp not null,
-  deleted_at timestamp
-);
-
-insert into company (name, url, created_at) values ('Typesafe', 'http://typesafe.com/', current_timestamp);
-insert into company (name, url, created_at) values ('Oracle', 'http://www.oracle.com/', current_timestamp);
-insert into company (name, url, created_at) values ('Google', 'http://www.google.com/', current_timestamp);
-insert into company (name, url, created_at) values ('Microsoft', 'http://www.microsoft.com/', current_timestamp);
+create index meter_reading_dates
+ on meter_reading
+ using btree(date);
