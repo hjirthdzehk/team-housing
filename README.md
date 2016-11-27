@@ -29,6 +29,7 @@
 * install [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * install [SBT](http://www.scala-sbt.org/download.html)
 * install [Postgresql](https://www.postgresql.org/download/)
+* install [Scala](`https://www.scala-lang.org/download/`)
 * create database in pg, yo can name it 'team_housing'
 * in `/Windows/System32/drivers/etc/hosts` add line `127.0.0.1   team.housing`
 * in `conf/application.conf` specify database credentials, example:
