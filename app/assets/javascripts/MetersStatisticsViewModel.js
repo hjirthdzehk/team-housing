@@ -5,13 +5,9 @@ var MetersStatisticsViewModel = function(profileData, personId) {
     });
 
     var currentDate = new Date().toJSON().slice(0, 10);
-    var oneMonthBeforeDate = function () {
-        var d = new Date();
-        d.setMonth(d.getMonth() - 1);
-        return d.toJSON().slice(0, 10);
-    }();
+    var beforeDate = new Date(1319673600000).toJSON().slice(0, 10)
 
-    self.from = ko.observable(oneMonthBeforeDate);
+    self.from = ko.observable(beforeDate);
     self.to = ko.observable(currentDate);
     self.selectedMeter = ko.observable(self.meters()[1]);
     self.metersCostData = ko.observableArray([]);
