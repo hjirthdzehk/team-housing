@@ -33,6 +33,7 @@ GET           /api/commented/:requestId           controllers.Comments.all(reque
 POST          /api/commented                      controllers.Comments.create()
 POST          /api/meters                         controllers.Meters.create()
 POST          /api/flats                          controllers.Flats.create()
+GET           /api/flats                          controllers.Flats.all()
 GET     /api/debt/:personId                 controllers.Billing.debt(personId: Long)
 POST    /api/bindPersonToFlat               controllers.Flats.bindFlatToPerson()
 

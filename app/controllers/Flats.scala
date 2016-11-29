@@ -66,7 +66,9 @@ class Flats @Inject() (json4j: Json4s) extends Controller {
           }
         )
     }
-
+    def all() = Action {
+      Ok(Extraction.decompose(Flat.all()))
+    }
   def bindFlatToPerson() = {
     Action {
       implicit req =>

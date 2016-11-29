@@ -10,15 +10,4 @@ var ProfileViewModel = function (profileData, personId) {
     self.flats = ko.observableArray(profileData.flats);
 
     self.fullName = self.surname() + ' ' + self.name() + ' ' + self.paternalName();
-
-    self.newFlatId = ko.observable('');
-
-    self.addNewFlat = function () {
-        $.post('/api/bindPersonToFlat', {
-            'personId': self.personId,
-            'flatId': self.newFlatId()
-        }).then(function () {
-            location.reload();
-        })
-    }
 };

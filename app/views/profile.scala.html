@@ -3,7 +3,6 @@
     <h1>Profile: <span data-bind='text: fullName'></span></h1>
     <h3 data-bind='text: email'></h3>
     <div>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addFlatModal">Add new flat</button>
     </div>
     <div class="panel-group" data-bind='foreach: flats'>
         <div class="panel panel-default">
@@ -27,34 +26,6 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="addFlatModal" tabindex="-1" role="dialog" aria-labelledby="addFlatLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="addFlatLabel">Add new request</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="col-md-2 control-label" for="flatId">Flat number</label>
-                    <div class="col-md-10 input-group">
-                        <div class="input-group-addon">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </div>
-                        <textarea id="newFlatId"
-                        class="form-control"
-                        rows="1"
-                        data-bind="value: newFlatId"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-bind="click: addNewFlat">Save changes</button>
             </div>
         </div>
     </div>

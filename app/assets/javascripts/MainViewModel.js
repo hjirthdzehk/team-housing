@@ -176,6 +176,16 @@ var MainViewModel = function() {
                 model: viewModel
             });
         });
+
+        this.get('#/dweller-lives-in-flat', function () {
+            $.when($.get('/dwellers/listAll'), $.get('/api/flats')).then(function(dwellers, flats){
+                var viewModel = new ConnectDwellerAndFlatViewModel(dwellers[0], flats[0]);
+                swapTemplate({
+                    name: 'connect-dweller-and-flat-template',
+                    model: viewModel
+                });
+            });
+        });
     });
 
     this.run = function (startUrl) {
